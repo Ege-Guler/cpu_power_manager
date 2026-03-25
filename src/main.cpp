@@ -1,12 +1,18 @@
 #include <iostream>
 #include "cpu/Cpu.hpp"
 
-int main(int argc, char* argv[]){
+int main()
+{
 
-    Cpu cpu0(0);
-
-    
-    std::cout << "CPU " << cpu0.getId() << " Governor: " << cpu0.getGovernor() << std::endl;
+    try
+    {
+        Cpu cpu0(0);
+        cpu0.printInfo();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 
     return 0;
 }
