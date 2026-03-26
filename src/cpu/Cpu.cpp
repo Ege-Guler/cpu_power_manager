@@ -3,17 +3,14 @@
 // Helper function to build paths based on templates
 std::string Cpu::path_builder(const std::string &templatePath) const
 {
-    char buffer[256];
-    snprintf(buffer, sizeof(buffer), templatePath.c_str(), id);
+    std::string path = std::vformat(templatePath, std::make_format_args(id));
 
-    std::string path(buffer);
-
-    if (std::ifstream file(path); !file.good())
+    if(!std::filesystem::exists(path))
     {
-        throw std::runtime_error("Path " + path + " does not exist for CPU " + std::to_string(id));
+        throw std::runtime_error("Path does not exist: " + path);
     }
 
-    return std::string(buffer);
+    return path;
 }
 
 // Constructor initializes CPU ID and builds paths
@@ -128,7 +125,6 @@ bool Cpu::setEnergyPerformancePreference(const std::string &preference)
     {
         if (pref == preference)
         {
-            std::cout << "Setting EPP to " << preference << std::endl;
             return Sysfs::write(path_builder(CpuPaths::ENERGY_PERFORMANCE_PREFERENCE), preference);
         }
     }
