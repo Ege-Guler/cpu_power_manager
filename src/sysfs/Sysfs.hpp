@@ -3,7 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-
+#include <stdexcept>
 
 /*
 Functions for reading and writing to sysfs files. 

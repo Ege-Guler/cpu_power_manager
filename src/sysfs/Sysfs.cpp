@@ -27,30 +27,37 @@ namespace Sysfs
 
     bool write(const std::string &path, const std::string &val)
     {
-
         if(val.empty())
         {
-            std::cerr << "Error: Value to write is empty" << std::endl;
-            return "";
+            throw std::invalid_argument("Value to write cannot be empty");
+            return false;
         }
 
-        std::string temp = val;
-
-        if (temp.back() != '\n')
-            temp.pop_back();
-    
         std::ofstream file(path);
 
         if (!file.is_open())
         {
-            std::cerr << "Error: Could not open file " << path << " for writing" << std::endl;
-            return "";
+
+            throw std::runtime_error("Error: Could not open file " + path + " for writing");
+            return false;
         }
 
-        file << temp << "\n";
+        // Write the value. 
+        // Most sysfs files prefer a single trailing newline.
+        file << val << "\n";
         
-        return file.good();
+        // Explicitly flush and close to ensure the kernel receives it immediately
+        file.flush();
+        file.close();
 
+        // Check if the file operation actually succeeded
+        if (!file.good()) {
+
+            throw std::runtime_error("Error: Failed to write value '" + val + "' to file " + path);
+            return false;
+        }
+
+        return true;
     }
 
 }
