@@ -82,6 +82,19 @@ double Cpu::getMaxFreq() const
     return getFreqWrapper(path_builder(CpuPaths::MAX_FREQ));
 }
 
+bool Cpu::setGovernor(const std::string &governor)
+{
+
+    for(auto &gov : getAvailableGovernors())
+    {
+        if(gov == governor)
+        {
+            return Sysfs::write(path_builder(CpuPaths::SCALING_GOVERNOR), governor);
+        }
+    }
+    return false; // Governor not found in available governors
+}
+
 void Cpu::printInfo() const
 {
     std::cout << "CPU " << id << " Info:" << std::endl;
