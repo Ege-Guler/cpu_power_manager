@@ -51,6 +51,24 @@ std::vector<std::string> Cpu::getAvailableGovernors() const
     return result;
 }
 
+std::string Cpu::getEnergyPerformancePreference() const
+{
+    return Sysfs::read(path_builder(CpuPaths::ENERGY_PERFORMANCE_PREFERENCE));
+}
+
+std::vector<std::string> Cpu::getAvailableEnergyPerformancePreferences() const
+{
+    std::string prefs = Sysfs::read(path_builder(CpuPaths::ENERGY_PERFORMANCE_PREFERENCE_AVAILABLE));
+    std::vector<std::string> result;
+    std::istringstream iss(prefs);
+    std::string pref;
+
+    while (iss >> pref)
+        result.push_back(pref);
+
+    return result;
+}
+
 // Getters
 double Cpu::getFreqWrapper(const std::string &freqPath) const
 {
@@ -85,16 +103,47 @@ double Cpu::getMaxFreq() const
 bool Cpu::setGovernor(const std::string &governor)
 {
 
-    for(auto &gov : getAvailableGovernors())
+    for (auto &gov : getAvailableGovernors())
     {
-        if(gov == governor)
+        if (gov == governor)
         {
-            return Sysfs::write(path_builder(CpuPaths::SCALING_GOVERNOR), governor);
+            std::string recommendedEPP = getRecommendedEPP(governor);
+            if (setEnergyPerformancePreference(recommendedEPP))
+            {
+                return Sysfs::write(path_builder(CpuPaths::SCALING_GOVERNOR), governor);
+            }
+            else
+            {
+                // !TODO: consider throwing an exception
+                std::cerr << "Failed to set EPP to " << recommendedEPP << " for governor " << governor << std::endl;
+                return false;
+            }
         }
     }
     return false; // Governor not found in available governors
 }
+bool Cpu::setEnergyPerformancePreference(const std::string &preference)
+{
+    for (auto &pref : getAvailableEnergyPerformancePreferences())
+    {
+        if (pref == preference)
+        {
+            std::cout << "Setting EPP to " << preference << std::endl;
+            return Sysfs::write(path_builder(CpuPaths::ENERGY_PERFORMANCE_PREFERENCE), preference);
+        }
+    }
+    return false; // Preference not found in available preferences
+}
 
+std::string Cpu::getRecommendedEPP(const std::string &governor) const
+{
+    auto it = m_governorEppMap.find(governor);
+    if (it != m_governorEppMap.end())
+    {
+        return it->second;
+    }
+    return DEFAULT_EPP;
+}
 void Cpu::printInfo() const
 {
     std::cout << "CPU " << id << " Info:" << std::endl;
@@ -102,6 +151,11 @@ void Cpu::printInfo() const
     std::cout << "  Available Governors: ";
     for (const auto &gov : getAvailableGovernors())
         std::cout << gov << " ";
+    std::cout << std::endl;
+    std::cout << "  Energy Performance Preference: " << getEnergyPerformancePreference() << std::endl;
+    std::cout << "  Available Energy Performance Preferences: ";
+    for (const auto &pref : getAvailableEnergyPerformancePreferences())
+        std::cout << pref << " ";
     std::cout << std::endl;
     std::cout << "  Current Frequency: " << getCurrentFreq() << " MHz" << std::endl;
     std::cout << "  Min Frequency: " << getMinFreq() << " MHz" << std::endl;

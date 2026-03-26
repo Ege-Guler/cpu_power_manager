@@ -8,6 +8,7 @@ int main()
     {
         Cpu cpu0(0);
         cpu0.printInfo();
+        std::cout << cpu0.setGovernor("powersave");
     }
     catch (const std::exception &e)
     {

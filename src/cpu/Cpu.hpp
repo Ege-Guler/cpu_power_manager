@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <unordered_map>
 #include <stdexcept>
 
 #include "constants.hpp"
@@ -21,6 +22,16 @@ private:
     bool exists;
     bool hasCpuFreq;
 
+    inline static const std::unordered_map<std::string, std::string> m_governorEppMap = {
+        {"performance",  "performance"},
+        {"powersave",    "balance_power"},
+        {"schedutil",    "balance_performance"},
+        {"ondemand",     "balance_performance"},
+        {"conservative", "balance_power"}
+    };
+    // A fallback default in case a governor isn't in the map
+    inline static const std::string DEFAULT_EPP = "balance_performance";
+
     std::string path_builder(const std::string &templatePath) const;
 
     double getFreqWrapper(const std::string &freqPath) const;
@@ -35,11 +46,17 @@ public:
     std::string getGovernor() const;
     std::vector<std::string> getAvailableGovernors() const;
 
+    std::string getEnergyPerformancePreference() const;
+    std::vector<std::string> getAvailableEnergyPerformancePreferences() const;
+
     double getCurrentFreq() const;
     double getMinFreq() const;
     double getMaxFreq() const;
 
     bool setGovernor(const std::string &governor);
+    bool setEnergyPerformancePreference(const std::string &preference);
+
+    std::string getRecommendedEPP(const std::string &governor) const;
 
     void printInfo() const;
 };
