@@ -29,7 +29,6 @@ namespace Sysfs
         if(val.empty())
         {
             throw std::invalid_argument("Value to write cannot be empty");
-            return false;
         }
 
         std::ofstream file(path);
@@ -38,7 +37,6 @@ namespace Sysfs
         {
 
             throw std::runtime_error("Error: Could not open file " + path + " for writing");
-            return false;
         }
 
         // Write the value. 
