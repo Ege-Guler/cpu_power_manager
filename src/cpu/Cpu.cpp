@@ -1,7 +1,7 @@
 #include "Cpu.hpp"
 
 // Helper function to build paths based on templates
-std::string Cpu::path_builder(const std::string &templatePath) const
+std::string Cpu::path_builder(std::string_view templatePath) const
 {
     std::string path = std::vformat(templatePath, std::make_format_args(id));
 

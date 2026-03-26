@@ -34,7 +34,7 @@ private:
     // A fallback default in case a governor isn't in the map
     inline static const std::string DEFAULT_EPP = "balance_performance";
 
-    std::string path_builder(const std::string &templatePath) const;
+    std::string path_builder(std::string_view templatePath) const;
 
     double getFreqWrapper(const std::string &freqPath) const;
 
