@@ -9,8 +9,7 @@ namespace Sysfs
 
         if (!file.is_open())
         {
-            std::cerr << "Error: Could not open file " << path << "     for reading" << std::endl;
-            return "";
+            throw std::runtime_error("Error: Could not open file " + path + " for reading");
         }
 
         std::stringstream ss;
@@ -48,15 +47,14 @@ namespace Sysfs
         
         // Explicitly flush and close to ensure the kernel receives it immediately
         file.flush();
-        file.close();
 
         // Check if the file operation actually succeeded
-        if (!file.good()) {
+        if (!file) {
 
             throw std::runtime_error("Error: Failed to write value '" + val + "' to file " + path);
-            return false;
         }
 
+        // RAII handles file.close()
         return true;
     }
 
