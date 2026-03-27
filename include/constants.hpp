@@ -30,5 +30,8 @@ namespace CpuPaths
         "/sys/devices/system/cpu/cpu{}/cpufreq/energy_performance_preference";
     inline constexpr std::string_view ENERGY_PERFORMANCE_PREFERENCE_AVAILABLE =
         "/sys/devices/system/cpu/cpu{}/cpufreq/energy_performance_available_preferences";
-
+    inline constexpr std::string_view RELATED_CPUS =
+        "/sys/devices/system/cpu/cpu{}/cpufreq/related_cpus";
+    inline constexpr std::string_view SCALING_DRIVER =
+        "/sys/devices/system/cpu/cpu{}/cpufreq/scaling_driver";
 }
