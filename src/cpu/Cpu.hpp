@@ -60,5 +60,9 @@ public:
 
     std::string getRecommendedEPP(const std::string &governor) const;
 
+    std::vector<int> getRelatedCpus() const;
+
+    std::string getScalingDriverName() const;
+
     void printInfo() const;
 };

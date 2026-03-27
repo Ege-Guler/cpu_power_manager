@@ -140,6 +140,26 @@ std::string Cpu::getRecommendedEPP(const std::string &governor) const
     }
     return DEFAULT_EPP;
 }
+
+std::vector<int> Cpu::getRelatedCpus() const
+{
+    std::string relatedCpus = Sysfs::read(path_builder(CpuPaths::RELATED_CPUS));
+    std::vector<int> result;
+    std::istringstream iss(relatedCpus);
+    int cpuId;
+
+    while (iss >> cpuId)
+        result.push_back(cpuId);
+
+    return result;
+}
+
+std::string Cpu::getScalingDriverName() const
+{
+    return Sysfs::read(path_builder(CpuPaths::SCALING_DRIVER));
+}
+
+
 void Cpu::printInfo() const
 {
     std::cout << "CPU " << id << " Info:" << std::endl;
