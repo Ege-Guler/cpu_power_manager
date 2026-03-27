@@ -1,14 +1,21 @@
 #include <iostream>
 #include "cpu/Cpu.hpp"
+#include "cpu/CpuManager.hpp"
 
 int main()
 {
 
     try
     {
+
+        CpuManager cpuManager;
+        // cpuManager.showAllCpuInfo();
+        // cpuManager.showAllCpuFrequencies();
+        // cpuManager.applyGovernorToAll("powersave");
+        cpuManager.printCpuDomainInfo();
         Cpu cpu0(0);
-        cpu0.printInfo();
-        std::cout << cpu0.setGovernor("powersave");
+        std::cout << cpu0.getScalingDriverName();
+        // std::cout << cpu0.setGovernor("powersave");
     }
     catch (const std::exception &e)
     {
