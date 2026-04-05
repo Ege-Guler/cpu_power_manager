@@ -24,6 +24,12 @@ private:
     bool exists;
     bool hasCpuFreq;
 
+    // frequencies from cpuinfo (in kHz, converted to MHz in getters)
+    uint64_t cpuInfoMinFreq;
+    uint64_t cpuInfoMaxFreq;
+
+
+
     inline static const std::unordered_map<std::string, std::string> m_governorEppMap = {
         {"performance",  "performance"},
         {"powersave",    "balance_power"},
@@ -37,6 +43,11 @@ private:
     std::string path_builder(std::string_view templatePath) const;
 
     double getFreqWrapper(const std::string &freqPath) const;
+
+
+    bool isfreqWithinCpuInfoBounds(double freqMHz) const;
+
+    uint64_t getCpuInfoFreq(const std::string_view freqPath) const;
 
 public:
     Cpu(int cpuId);
@@ -59,6 +70,10 @@ public:
     // CPU info frequencies in MHz (may differ from scaling frequencies)
     double getCpuInfoMinFreq() const;
     double getCpuInfoMaxFreq() const;
+
+    // setters for scaling frequencies (in MHz)
+    bool setScalingMinFreq(double freqMHz);
+    bool setScalingMaxFreq(double freqMHz);
 
     bool setGovernor(const std::string &governor);
     bool setEnergyPerformancePreference(const std::string &preference);

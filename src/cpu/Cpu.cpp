@@ -28,6 +28,8 @@ Cpu::Cpu(int cpuId) : id(cpuId)
 
     this->exists = true;
     this->hasCpuFreq = true;
+    this->cpuInfoMinFreq = getCpuInfoFreq(CpuPaths::CPUINFO_MIN_FREQ);
+    this->cpuInfoMaxFreq = getCpuInfoFreq(CpuPaths::CPUINFO_MAX_FREQ);
 }
 
 std::string Cpu::getGovernor() const
@@ -73,6 +75,11 @@ double Cpu::getFreqWrapper(const std::string &freqPath) const
     return std::stod(rawFreqStr) / 1000.0; // Convert kHz to MHz
 }
 
+uint64_t Cpu::getCpuInfoFreq(const std::string_view freqPath) const
+{
+    return std::stoul(Sysfs::read(path_builder(freqPath)));
+}
+
 std::string Cpu::getBasePath() const
 {
     return basePath;
@@ -99,14 +106,33 @@ double Cpu::getScalingMaxFreq() const
 
 double Cpu::getCpuInfoMinFreq() const
 {
-    return getFreqWrapper(path_builder(CpuPaths::CPUINFO_MIN_FREQ));
+    return static_cast<double>(cpuInfoMinFreq) / 1000.0; 
 }
 
 double Cpu::getCpuInfoMaxFreq() const
 {
-    return getFreqWrapper(path_builder(CpuPaths::CPUINFO_MAX_FREQ));
+    return static_cast<double>(cpuInfoMaxFreq) / 1000.0;
 }
 
+bool Cpu::setScalingMinFreq(double freqMHz)
+{
+    int freqKHz = static_cast<int>(freqMHz * 1000);
+    
+    if(freqKHz < static_cast<int>(getCpuInfoMinFreq() * 1000) || freqKHz > static_cast<int>(getCpuInfoMaxFreq() * 1000))
+    {
+        std::cerr << "Requested frequency " << freqMHz << " MHz is out of CPU info bounds (" 
+                  << getCpuInfoMinFreq() << " MHz - " << getCpuInfoMaxFreq() << " MHz)" << std::endl;
+        return false;
+    }
+
+    return Sysfs::write(path_builder(CpuPaths::SCALING_MIN_FREQ), std::to_string(freqKHz));
+}
+
+bool Cpu::setScalingMaxFreq(double freqMHz)
+{
+    int freqKHz = static_cast<int>(freqMHz * 1000);
+    return Sysfs::write(path_builder(CpuPaths::SCLAING_MAX_FREQ), std::to_string(freqKHz));
+}
 
 bool Cpu::setGovernor(const std::string &governor)
 {
