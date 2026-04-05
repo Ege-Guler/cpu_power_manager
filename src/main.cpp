@@ -5,8 +5,7 @@
 int main()
 {
 
-    try
-    {
+    try {
 
         CpuManager cpuManager;
         // cpuManager.showAllCpuInfo();
@@ -17,8 +16,7 @@ int main()
         std::cout << cpu0.getScalingDriverName();
         // std::cout << cpu0.setGovernor("powersave");
     }
-    catch (const std::exception &e)
-    {
+    catch (const std::exception& e) {
         std::cerr << e.what() << '\n';
     }
 

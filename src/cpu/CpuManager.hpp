@@ -1,20 +1,19 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <stdexcept>
-#include <thread>
+#include <algorithm>
 #include <format>
 #include <iostream>
-#include <set>
 #include <map>
-#include <algorithm>
+#include <set>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <vector>
 #include "Cpu.hpp"
-
 
 class CpuManager
 {
-public:
+  public:
     CpuManager();
 
     void discoverCpus();
@@ -25,13 +24,12 @@ public:
     void listAllCpuGovernors() const;
     void listAllAvailableGovernors() const;
 
-
     bool applyGovernorToAll(const std::string& governor);
     bool isGovernorSupportedByAll(const std::string& governor) const;
 
     void printCpuDomainInfo() const;
 
-private:
+  private:
     std::vector<Cpu> cpus;
 
     unsigned int cpuCount;
@@ -39,5 +37,4 @@ private:
     std::map<int, std::set<int>> relatedCpuDomains;
 
     std::map<int, std::set<int>> getRelatedCpuDomains() const;
-
 };
