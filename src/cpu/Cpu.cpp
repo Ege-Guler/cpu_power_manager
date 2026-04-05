@@ -82,19 +82,19 @@ int Cpu::getId() const
     return id;
 }
 
-double Cpu::getCurrentFreq() const
+double Cpu::getScalingCurrentFreq() const
 {
-    return getFreqWrapper(path_builder(CpuPaths::CUR_FREQ));
+    return getFreqWrapper(path_builder(CpuPaths::SCALING_CUR_FREQ));
 }
 
-double Cpu::getMinFreq() const
+double Cpu::getScalingMinFreq() const
 {
-    return getFreqWrapper(path_builder(CpuPaths::MIN_FREQ));
+    return getFreqWrapper(path_builder(CpuPaths::SCALING_MIN_FREQ));
 }
 
-double Cpu::getMaxFreq() const
+double Cpu::getScalingMaxFreq() const
 {
-    return getFreqWrapper(path_builder(CpuPaths::MAX_FREQ));
+    return getFreqWrapper(path_builder(CpuPaths::SCLAING_MAX_FREQ));
 }
 
 double Cpu::getCpuInfoMinFreq() const
@@ -184,9 +184,9 @@ void Cpu::printInfo() const
     for (const auto &pref : getAvailableEnergyPerformancePreferences())
         std::cout << pref << " ";
     std::cout << std::endl;
-    std::cout << "  Current Frequency: " << getCurrentFreq() << " MHz" << std::endl;
-    std::cout << "  Min Frequency: " << getMinFreq() << " MHz" << std::endl;
-    std::cout << "  Max Frequency: " << getMaxFreq() << " MHz" << std::endl;
+    std::cout << "  Scaling Current Frequency: " << getScalingCurrentFreq() << " MHz" << std::endl;
+    std::cout << "  Scaling Min Frequency: " << getScalingMinFreq() << " MHz" << std::endl;
+    std::cout << "  Scaling Max Frequency: " << getScalingMaxFreq() << " MHz" << std::endl;
     std::cout << "  CPU Info Min Frequency: " << getCpuInfoMinFreq() << " MHz" << std::endl;
     std::cout << "  CPU Info Max Frequency: " << getCpuInfoMaxFreq() << " MHz" << std::endl;
 }

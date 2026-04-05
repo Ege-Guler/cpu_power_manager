@@ -51,10 +51,10 @@ public:
     std::string getEnergyPerformancePreference() const;
     std::vector<std::string> getAvailableEnergyPerformancePreferences() const;
 
-    // Current current scaling frequency in MHz
-    double getCurrentFreq() const;
-    double getMinFreq() const;
-    double getMaxFreq() const;
+    // Current  scaling frequency in MHz
+    double getScalingCurrentFreq() const;
+    double getScalingMinFreq() const;
+    double getScalingMaxFreq() const;
 
     // CPU info frequencies in MHz (may differ from scaling frequencies)
     double getCpuInfoMinFreq() const;
