@@ -97,6 +97,17 @@ double Cpu::getMaxFreq() const
     return getFreqWrapper(path_builder(CpuPaths::MAX_FREQ));
 }
 
+double Cpu::getCpuInfoMinFreq() const
+{
+    return getFreqWrapper(path_builder(CpuPaths::CPUINFO_MIN_FREQ));
+}
+
+double Cpu::getCpuInfoMaxFreq() const
+{
+    return getFreqWrapper(path_builder(CpuPaths::CPUINFO_MAX_FREQ));
+}
+
+
 bool Cpu::setGovernor(const std::string &governor)
 {
 
@@ -176,4 +187,6 @@ void Cpu::printInfo() const
     std::cout << "  Current Frequency: " << getCurrentFreq() << " MHz" << std::endl;
     std::cout << "  Min Frequency: " << getMinFreq() << " MHz" << std::endl;
     std::cout << "  Max Frequency: " << getMaxFreq() << " MHz" << std::endl;
+    std::cout << "  CPU Info Min Frequency: " << getCpuInfoMinFreq() << " MHz" << std::endl;
+    std::cout << "  CPU Info Max Frequency: " << getCpuInfoMaxFreq() << " MHz" << std::endl;
 }

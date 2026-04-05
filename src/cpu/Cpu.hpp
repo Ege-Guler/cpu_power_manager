@@ -51,9 +51,14 @@ public:
     std::string getEnergyPerformancePreference() const;
     std::vector<std::string> getAvailableEnergyPerformancePreferences() const;
 
+    // Current current scaling frequency in MHz
     double getCurrentFreq() const;
     double getMinFreq() const;
     double getMaxFreq() const;
+
+    // CPU info frequencies in MHz (may differ from scaling frequencies)
+    double getCpuInfoMinFreq() const;
+    double getCpuInfoMaxFreq() const;
 
     bool setGovernor(const std::string &governor);
     bool setEnergyPerformancePreference(const std::string &preference);

@@ -34,4 +34,8 @@ namespace CpuPaths
         "/sys/devices/system/cpu/cpu{}/cpufreq/related_cpus";
     inline constexpr std::string_view SCALING_DRIVER =
         "/sys/devices/system/cpu/cpu{}/cpufreq/scaling_driver";
+    inline constexpr std::string_view CPUINFO_MIN_FREQ =
+        "/sys/devices/system/cpu/cpu{}/cpufreq/cpuinfo_min_freq";
+    inline constexpr std::string_view CPUINFO_MAX_FREQ =
+        "/sys/devices/system/cpu/cpu{}/cpufreq/cpuinfo_max_freq";
 }
