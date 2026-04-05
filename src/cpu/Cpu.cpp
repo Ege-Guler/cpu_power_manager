@@ -75,6 +75,11 @@ double Cpu::getFreqWrapper(const std::string &freqPath) const
     return std::stod(rawFreqStr) / 1000.0; // Convert kHz to MHz
 }
 
+bool Cpu::isfreqWithinCpuInfoBounds(double freqMHz) const
+{
+    return (freqMHz >= this->cpuInfoMinFreq) && (freqMHz <= this->cpuInfoMaxFreq);
+}
+
 uint64_t Cpu::getCpuInfoFreq(const std::string_view freqPath) const
 {
     return std::stoul(Sysfs::read(path_builder(freqPath)));
@@ -114,24 +119,23 @@ double Cpu::getCpuInfoMaxFreq() const
     return static_cast<double>(cpuInfoMaxFreq) / 1000.0;
 }
 
-bool Cpu::setScalingMinFreq(double freqMHz)
-{
-    int freqKHz = static_cast<int>(freqMHz * 1000);
-    
-    if(freqKHz < static_cast<int>(getCpuInfoMinFreq() * 1000) || freqKHz > static_cast<int>(getCpuInfoMaxFreq() * 1000))
+bool Cpu::setScalingMinFreq(double freqMHz) const{
+
+    uint64_t freqKHz = static_cast<uint64_t>(freqMHz * 1000);
+    if (this->isfreqWithinCpuInfoBounds(freqKHz))
     {
-        std::cerr << "Requested frequency " << freqMHz << " MHz is out of CPU info bounds (" 
-                  << getCpuInfoMinFreq() << " MHz - " << getCpuInfoMaxFreq() << " MHz)" << std::endl;
-        return false;
+        return Sysfs::write(path_builder(CpuPaths::SCALING_MIN_FREQ), std::to_string(freqKHz));
     }
-
-    return Sysfs::write(path_builder(CpuPaths::SCALING_MIN_FREQ), std::to_string(freqKHz));
+    return false; // Requested frequency is out of CPU info bounds
 }
-
-bool Cpu::setScalingMaxFreq(double freqMHz)
-{
-    int freqKHz = static_cast<int>(freqMHz * 1000);
-    return Sysfs::write(path_builder(CpuPaths::SCLAING_MAX_FREQ), std::to_string(freqKHz));
+bool Cpu::setScalingMaxFreq(double freqMHz) const{
+    
+    uint64_t freqKHz = static_cast<uint64_t>(freqMHz * 1000);
+    if (this->isfreqWithinCpuInfoBounds(freqKHz))
+    {
+        return Sysfs::write(path_builder(CpuPaths::SCLAING_MAX_FREQ), std::to_string(freqKHz));
+    }
+    return false; // Requested frequency is out of CPU info bounds 
 }
 
 bool Cpu::setGovernor(const std::string &governor)

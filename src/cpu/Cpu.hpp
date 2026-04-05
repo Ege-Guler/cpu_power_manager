@@ -71,9 +71,9 @@ public:
     double getCpuInfoMinFreq() const;
     double getCpuInfoMaxFreq() const;
 
-    // setters for scaling frequencies (in MHz)
-    bool setScalingMinFreq(double freqMHz);
-    bool setScalingMaxFreq(double freqMHz);
+    // setters for scaling frequencies (in MHz), return false if requested frequency is out of CPU info bounds
+    bool setScalingMinFreq(double freqMHz) const;
+    bool setScalingMaxFreq(double freqMHz) const;
 
     bool setGovernor(const std::string &governor);
     bool setEnergyPerformancePreference(const std::string &preference);

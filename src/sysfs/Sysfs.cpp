@@ -36,7 +36,7 @@ namespace Sysfs
         if (!file.is_open())
         {
 
-            throw std::runtime_error("Error: Could not open file " + path + " for writing");
+            throw std::runtime_error("Error: Could not open file " + path + " for writing. Check if the file exists and you have the necessary permissions.");
         }
 
         // Write the value. 
