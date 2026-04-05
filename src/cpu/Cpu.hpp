@@ -1,10 +1,10 @@
 #pragma once
-#include <vector>
-#include <string>
-#include <unordered_map>
-#include <stdexcept>
 #include <filesystem>
 #include <format>
+#include <stdexcept>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 #include "constants.hpp"
 #include "sysfs/Sysfs.hpp"
@@ -16,7 +16,7 @@ Class for representing a single CPU core.
 
 class Cpu
 {
-private:
+  private:
     int id;                  // CPU ID (e.g., 0 for cpu0, 1 for cpu1, etc.)
     std::string basePath;    // Base path for this CPU (e.g., /sys/devices/system/cpu/cpu0)
     std::string cpufreqPath; // Path for cpufreq info (e.g., /sys/devices/system/cpu/cpu0/cpufreq)
@@ -28,28 +28,24 @@ private:
     uint64_t cpuInfoMinFreq;
     uint64_t cpuInfoMaxFreq;
 
-
-
     inline static const std::unordered_map<std::string, std::string> m_governorEppMap = {
-        {"performance",  "performance"},
-        {"powersave",    "balance_power"},
-        {"schedutil",    "balance_performance"},
-        {"ondemand",     "balance_performance"},
-        {"conservative", "balance_power"}
-    };
+        {"performance", "performance"},
+        {"powersave", "balance_power"},
+        {"schedutil", "balance_performance"},
+        {"ondemand", "balance_performance"},
+        {"conservative", "balance_power"}};
     // A fallback default in case a governor isn't in the map
     inline static const std::string DEFAULT_EPP = "balance_performance";
 
     std::string path_builder(std::string_view templatePath) const;
 
-    double getFreqWrapper(const std::string &freqPath) const;
-
+    double getFreqWrapper(const std::string& freqPath) const;
 
     bool isfreqWithinCpuInfoBounds(double freqMHz) const;
 
     uint64_t getCpuInfoFreq(const std::string_view freqPath) const;
 
-public:
+  public:
     Cpu(int cpuId);
 
     // Getters
@@ -75,10 +71,10 @@ public:
     bool setScalingMinFreq(double freqMHz) const;
     bool setScalingMaxFreq(double freqMHz) const;
 
-    bool setGovernor(const std::string &governor);
-    bool setEnergyPerformancePreference(const std::string &preference);
+    bool setGovernor(const std::string& governor);
+    bool setEnergyPerformancePreference(const std::string& preference);
 
-    std::string getRecommendedEPP(const std::string &governor) const;
+    std::string getRecommendedEPP(const std::string& governor) const;
 
     std::vector<int> getRelatedCpus() const;
 

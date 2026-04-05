@@ -5,8 +5,7 @@ std::string Cpu::path_builder(std::string_view templatePath) const
 {
     std::string path = std::vformat(templatePath, std::make_format_args(id));
 
-    if(!std::filesystem::exists(path))
-    {
+    if (!std::filesystem::exists(path)) {
         throw std::runtime_error("Path does not exist: " + path);
     }
 
@@ -16,13 +15,11 @@ std::string Cpu::path_builder(std::string_view templatePath) const
 // Constructor initializes CPU ID and builds paths
 Cpu::Cpu(int cpuId) : id(cpuId)
 {
-    try
-    {
+    try {
         basePath = path_builder(CpuPaths::CPU_DIR);
         cpufreqPath = path_builder(CpuPaths::CPUFREQ_DIR);
     }
-    catch (const std::exception &e)
-    {
+    catch (const std::exception& e) {
         throw std::runtime_error("Failed to initialize CPU " + std::to_string(cpuId) + ": " + e.what());
     }
 
@@ -69,7 +66,7 @@ std::vector<std::string> Cpu::getAvailableEnergyPerformancePreferences() const
 }
 
 // Getters
-double Cpu::getFreqWrapper(const std::string &freqPath) const
+double Cpu::getFreqWrapper(const std::string& freqPath) const
 {
     std::string rawFreqStr = Sysfs::read(freqPath);
     return std::stod(rawFreqStr) / 1000.0; // Convert kHz to MHz
@@ -111,7 +108,7 @@ double Cpu::getScalingMaxFreq() const
 
 double Cpu::getCpuInfoMinFreq() const
 {
-    return static_cast<double>(cpuInfoMinFreq) / 1000.0; 
+    return static_cast<double>(cpuInfoMinFreq) / 1000.0;
 }
 
 double Cpu::getCpuInfoMaxFreq() const
@@ -119,39 +116,35 @@ double Cpu::getCpuInfoMaxFreq() const
     return static_cast<double>(cpuInfoMaxFreq) / 1000.0;
 }
 
-bool Cpu::setScalingMinFreq(double freqMHz) const{
+bool Cpu::setScalingMinFreq(double freqMHz) const
+{
 
     uint64_t freqKHz = static_cast<uint64_t>(freqMHz * 1000);
-    if (this->isfreqWithinCpuInfoBounds(freqKHz))
-    {
+    if (this->isfreqWithinCpuInfoBounds(freqKHz)) {
         return Sysfs::write(path_builder(CpuPaths::SCALING_MIN_FREQ), std::to_string(freqKHz));
     }
     return false; // Requested frequency is out of CPU info bounds
 }
-bool Cpu::setScalingMaxFreq(double freqMHz) const{
-    
-    uint64_t freqKHz = static_cast<uint64_t>(freqMHz * 1000);
-    if (this->isfreqWithinCpuInfoBounds(freqKHz))
-    {
-        return Sysfs::write(path_builder(CpuPaths::SCLAING_MAX_FREQ), std::to_string(freqKHz));
-    }
-    return false; // Requested frequency is out of CPU info bounds 
-}
-
-bool Cpu::setGovernor(const std::string &governor)
+bool Cpu::setScalingMaxFreq(double freqMHz) const
 {
 
-    for (auto &gov : getAvailableGovernors())
-    {
-        if (gov == governor)
-        {
+    uint64_t freqKHz = static_cast<uint64_t>(freqMHz * 1000);
+    if (this->isfreqWithinCpuInfoBounds(freqKHz)) {
+        return Sysfs::write(path_builder(CpuPaths::SCLAING_MAX_FREQ), std::to_string(freqKHz));
+    }
+    return false; // Requested frequency is out of CPU info bounds
+}
+
+bool Cpu::setGovernor(const std::string& governor)
+{
+
+    for (auto& gov : getAvailableGovernors()) {
+        if (gov == governor) {
             std::string recommendedEPP = getRecommendedEPP(governor);
-            if (setEnergyPerformancePreference(recommendedEPP))
-            {
+            if (setEnergyPerformancePreference(recommendedEPP)) {
                 return Sysfs::write(path_builder(CpuPaths::SCALING_GOVERNOR), governor);
             }
-            else
-            {
+            else {
                 // !TODO: consider throwing an exception
                 std::cerr << "Failed to set EPP to " << recommendedEPP << " for governor " << governor << std::endl;
                 return false;
@@ -160,23 +153,20 @@ bool Cpu::setGovernor(const std::string &governor)
     }
     return false; // Governor not found in available governors
 }
-bool Cpu::setEnergyPerformancePreference(const std::string &preference)
+bool Cpu::setEnergyPerformancePreference(const std::string& preference)
 {
-    for (auto &pref : getAvailableEnergyPerformancePreferences())
-    {
-        if (pref == preference)
-        {
+    for (auto& pref : getAvailableEnergyPerformancePreferences()) {
+        if (pref == preference) {
             return Sysfs::write(path_builder(CpuPaths::ENERGY_PERFORMANCE_PREFERENCE), preference);
         }
     }
     return false; // Preference not found in available preferences
 }
 
-std::string Cpu::getRecommendedEPP(const std::string &governor) const
+std::string Cpu::getRecommendedEPP(const std::string& governor) const
 {
     auto it = m_governorEppMap.find(governor);
-    if (it != m_governorEppMap.end())
-    {
+    if (it != m_governorEppMap.end()) {
         return it->second;
     }
     return DEFAULT_EPP;
@@ -200,18 +190,17 @@ std::string Cpu::getScalingDriverName() const
     return Sysfs::read(path_builder(CpuPaths::SCALING_DRIVER));
 }
 
-
 void Cpu::printInfo() const
 {
     std::cout << "CPU " << id << " Info:" << std::endl;
     std::cout << "  Governor: " << getGovernor() << std::endl;
     std::cout << "  Available Governors: ";
-    for (const auto &gov : getAvailableGovernors())
+    for (const auto& gov : getAvailableGovernors())
         std::cout << gov << " ";
     std::cout << std::endl;
     std::cout << "  Energy Performance Preference: " << getEnergyPerformancePreference() << std::endl;
     std::cout << "  Available Energy Performance Preferences: ";
-    for (const auto &pref : getAvailableEnergyPerformancePreferences())
+    for (const auto& pref : getAvailableEnergyPerformancePreferences())
         std::cout << pref << " ";
     std::cout << std::endl;
     std::cout << "  Scaling Current Frequency: " << getScalingCurrentFreq() << " MHz" << std::endl;
