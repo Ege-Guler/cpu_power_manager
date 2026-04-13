@@ -105,7 +105,7 @@ double Cpu::getScalingMinFreq() const
 
 double Cpu::getScalingMaxFreq() const
 {
-    return getFreqWrapper(path_builder(CpuPaths::SCLAING_MAX_FREQ));
+    return getFreqWrapper(path_builder(CpuPaths::SCALING_MAX_FREQ));
 }
 
 double Cpu::getCpuInfoMinFreq() const
@@ -132,7 +132,7 @@ bool Cpu::setScalingMaxFreq(double freqMHz) const
 
     uint64_t freqKHz = static_cast<uint64_t>(freqMHz * 1000);
     if (this->isfreqWithinCpuInfoBounds(freqKHz)) {
-        return Sysfs::write(path_builder(CpuPaths::SCLAING_MAX_FREQ), std::to_string(freqKHz));
+        return Sysfs::write(path_builder(CpuPaths::SCALING_MAX_FREQ), std::to_string(freqKHz));
     }
     return false; // Requested frequency is out of CPU info bounds
 }

@@ -17,7 +17,7 @@ inline constexpr std::string_view SCALING_CUR_FREQ = "/sys/devices/system/cpu/cp
 
 inline constexpr std::string_view SCALING_MIN_FREQ = "/sys/devices/system/cpu/cpu{}/cpufreq/scaling_min_freq";
 
-inline constexpr std::string_view SCLAING_MAX_FREQ = "/sys/devices/system/cpu/cpu{}/cpufreq/scaling_max_freq";
+inline constexpr std::string_view SCALING_MAX_FREQ = "/sys/devices/system/cpu/cpu{}/cpufreq/scaling_max_freq";
 
 inline constexpr std::string_view ENERGY_PERFORMANCE_PREFERENCE =
     "/sys/devices/system/cpu/cpu{}/cpufreq/energy_performance_preference";
