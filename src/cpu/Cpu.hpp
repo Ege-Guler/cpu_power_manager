@@ -73,8 +73,8 @@ class Cpu
     double getCpuInfoMaxFreq() const;
 
     // setters for scaling frequencies (in GHz), return false if requested frequency is out of CPU info bounds
-    bool setScalingMinFreq(double freqGHz) const;
-    bool setScalingMaxFreq(double freqGHz) const;
+    bool setScalingMinFreq(double freqGHz);
+    bool setScalingMaxFreq(double freqGHz);
 
     bool setGovernor(const std::string& governor);
     bool setEnergyPerformancePreference(const std::string& preference);

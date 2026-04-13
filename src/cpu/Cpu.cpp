@@ -118,7 +118,7 @@ double Cpu::getCpuInfoMaxFreq() const
     return static_cast<double>(cpuInfoMaxFreq) * KHZ_TO_GHZ;
 }
 
-bool Cpu::setScalingMinFreq(double freqGHz) const
+bool Cpu::setScalingMinFreq(double freqGHz)
 {
 
     uint64_t freqKHz = static_cast<uint64_t>(freqGHz * GHZ_TO_KHZ);
@@ -127,7 +127,7 @@ bool Cpu::setScalingMinFreq(double freqGHz) const
     }
     return false; // Requested frequency is out of CPU info bounds
 }
-bool Cpu::setScalingMaxFreq(double freqGHz) const
+bool Cpu::setScalingMaxFreq(double freqGHz)
 {
 
     uint64_t freqKHz = static_cast<uint64_t>(freqGHz * KHZ_TO_GHZ);
