@@ -25,7 +25,7 @@ class Cpu
     bool exists;
     bool hasCpuFreq;
 
-    // frequencies from cpuinfo (in kHz, converted to MHz in getters)
+    // frequencies from cpuinfo (in kHz, converted to GHz in getters)
     uint64_t cpuInfoMinFreq;
     uint64_t cpuInfoMaxFreq;
 
@@ -47,7 +47,10 @@ class Cpu
     uint64_t getCpuInfoFreq(const std::string_view freqPath) const;
 
   public:
-    static constexpr double KHZ_TO_MHZ = 1000.0;
+    
+    static constexpr double KHZ_TO_GHZ = 1.0 / 1E6;
+    static constexpr double GHZ_TO_KHZ = 1E6;
+
     explicit Cpu(int cpuId);
 
     // Getters
@@ -60,18 +63,18 @@ class Cpu
     std::string getEnergyPerformancePreference() const;
     std::vector<std::string> getAvailableEnergyPerformancePreferences() const;
 
-    // Current  scaling frequency in MHz
+    // Current  scaling frequency in GHz
     double getScalingCurrentFreq() const;
     double getScalingMinFreq() const;
     double getScalingMaxFreq() const;
 
-    // CPU info frequencies in MHz (may differ from scaling frequencies)
+    // CPU info frequencies in GHz (may differ from scaling frequencies)
     double getCpuInfoMinFreq() const;
     double getCpuInfoMaxFreq() const;
 
-    // setters for scaling frequencies (in MHz), return false if requested frequency is out of CPU info bounds
-    bool setScalingMinFreq(double freqMHz) const;
-    bool setScalingMaxFreq(double freqMHz) const;
+    // setters for scaling frequencies (in GHz), return false if requested frequency is out of CPU info bounds
+    bool setScalingMinFreq(double freqGHz) const;
+    bool setScalingMaxFreq(double freqGHz) const;
 
     bool setGovernor(const std::string& governor);
     bool setEnergyPerformancePreference(const std::string& preference);

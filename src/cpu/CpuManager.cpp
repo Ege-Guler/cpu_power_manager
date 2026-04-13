@@ -45,7 +45,7 @@ void CpuManager::showAllCpuInfo() const
 
 void CpuManager::showAllCpuFrequencies() const
 {
-    std::cout << "Current CPU Frequencies (MHz):\n";
+    std::cout << "Current CPU Frequencies (GHz):\n";
     for (const auto& cpu : cpus) {
         std::cout << "CPU " << std::format("{:>2}: {:>7.2f}", cpu.getId(), cpu.getScalingCurrentFreq()) << "\n";
     }

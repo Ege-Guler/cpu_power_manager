@@ -71,7 +71,7 @@ std::vector<std::string> Cpu::getAvailableEnergyPerformancePreferences() const
 double Cpu::getFreqWrapper(const std::string& freqPath) const
 {
     std::string rawFreqStr = Sysfs::read(freqPath);
-    return std::stod(rawFreqStr) / KHZ_TO_MHZ; // Convert kHz to MHz
+    return std::stod(rawFreqStr) * KHZ_TO_GHZ; // Convert kHz to GHz
 }
 
 bool Cpu::isfreqWithinCpuInfoBounds(uint64_t freqKHz) const
@@ -110,27 +110,27 @@ double Cpu::getScalingMaxFreq() const
 
 double Cpu::getCpuInfoMinFreq() const
 {
-    return static_cast<double>(cpuInfoMinFreq) / KHZ_TO_MHZ;
+    return static_cast<double>(cpuInfoMinFreq) * KHZ_TO_GHZ;
 }
 
 double Cpu::getCpuInfoMaxFreq() const
 {
-    return static_cast<double>(cpuInfoMaxFreq) / KHZ_TO_MHZ;
+    return static_cast<double>(cpuInfoMaxFreq) * KHZ_TO_GHZ;
 }
 
-bool Cpu::setScalingMinFreq(double freqMHz) const
+bool Cpu::setScalingMinFreq(double freqGHz) const
 {
 
-    uint64_t freqKHz = static_cast<uint64_t>(freqMHz * 1000);
+    uint64_t freqKHz = static_cast<uint64_t>(freqGHz * GHZ_TO_KHZ);
     if (this->isfreqWithinCpuInfoBounds(freqKHz)) {
         return Sysfs::write(path_builder(CpuPaths::SCALING_MIN_FREQ), std::to_string(freqKHz));
     }
     return false; // Requested frequency is out of CPU info bounds
 }
-bool Cpu::setScalingMaxFreq(double freqMHz) const
+bool Cpu::setScalingMaxFreq(double freqGHz) const
 {
 
-    uint64_t freqKHz = static_cast<uint64_t>(freqMHz * 1000);
+    uint64_t freqKHz = static_cast<uint64_t>(freqGHz * KHZ_TO_GHZ);
     if (this->isfreqWithinCpuInfoBounds(freqKHz)) {
         return Sysfs::write(path_builder(CpuPaths::SCALING_MAX_FREQ), std::to_string(freqKHz));
     }
@@ -210,9 +210,9 @@ void Cpu::printInfo() const
         std::cout << pref << " ";
     }
     std::cout << "\n";
-    std::cout << "  Scaling Current Frequency: " << getScalingCurrentFreq() << " MHz" << "\n";
-    std::cout << "  Scaling Min Frequency: " << getScalingMinFreq() << " MHz" << "\n";
-    std::cout << "  Scaling Max Frequency: " << getScalingMaxFreq() << " MHz" << "\n";
-    std::cout << "  CPU Info Min Frequency: " << getCpuInfoMinFreq() << " MHz" << "\n";
-    std::cout << "  CPU Info Max Frequency: " << getCpuInfoMaxFreq() << " MHz" << "\n";
+    std::cout << "  Scaling Current Frequency: " << getScalingCurrentFreq() << " GHz" << "\n";
+    std::cout << "  Scaling Min Frequency: " << getScalingMinFreq() << " GHz" << "\n";
+    std::cout << "  Scaling Max Frequency: " << getScalingMaxFreq() << " GHz" << "\n";
+    std::cout << "  CPU Info Min Frequency: " << getCpuInfoMinFreq() << " GHz" << "\n";
+    std::cout << "  CPU Info Max Frequency: " << getCpuInfoMaxFreq() << " GHz" << "\n";
 }
