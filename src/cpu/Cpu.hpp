@@ -14,6 +14,7 @@ Class for representing a single CPU core.
 
 */
 
+
 class Cpu
 {
   private:
@@ -41,12 +42,13 @@ class Cpu
 
     double getFreqWrapper(const std::string& freqPath) const;
 
-    bool isfreqWithinCpuInfoBounds(double freqMHz) const;
+    bool isfreqWithinCpuInfoBounds(uint64_t freqKHz) const;
 
     uint64_t getCpuInfoFreq(const std::string_view freqPath) const;
 
   public:
-    Cpu(int cpuId);
+    static constexpr double KHZ_TO_MHZ = 1000.0;
+    explicit Cpu(int cpuId);
 
     // Getters
     int getId() const;

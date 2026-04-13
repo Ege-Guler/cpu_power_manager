@@ -47,7 +47,7 @@ void CpuManager::showAllCpuFrequencies() const
 {
     std::cout << "Current CPU Frequencies (MHz):\n";
     for (const auto& cpu : cpus) {
-        std::cout << "CPU " << std::format("{:>2}: {:>7.2f}", cpu.getId(), cpu.getScalingCurrentFreq()) << std::endl;
+        std::cout << "CPU " << std::format("{:>2}: {:>7.2f}", cpu.getId(), cpu.getScalingCurrentFreq()) << "\n";
     }
 }
 
@@ -55,7 +55,7 @@ void CpuManager::listAllCpuGovernors() const
 {
     std::cout << "Current CPU Governors:\n";
     for (const auto& cpu : cpus) {
-        std::cout << "CPU " << std::format("{:>2}: {}", cpu.getId(), cpu.getGovernor()) << std::endl;
+        std::cout << "CPU " << std::format("{:>2}: {}", cpu.getId(), cpu.getGovernor()) << "\n";
     }
 }
 
@@ -83,7 +83,7 @@ bool CpuManager::applyGovernorToAll(const std::string& governor)
     bool success = true;
     for (auto& cpu : cpus) {
         if (!cpu.setGovernor(governor)) {
-            std::cerr << "Failed to set governor '" << governor << "' for CPU " << cpu.getId() << std::endl;
+            std::cerr << "Failed to set governor '" << governor << "' for CPU " << cpu.getId() << "\n";
             success = false; // Continue trying to set for other CPUs, but mark overall failure
         }
     }
@@ -98,6 +98,6 @@ void CpuManager::printCpuDomainInfo() const
         for (int cpuId : relatedCpus) {
             std::cout << std::format("{:>3} ", cpuId);
         }
-        std::cout << std::endl;
+        std::cout << "\n";
     }
 }

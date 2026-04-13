@@ -41,8 +41,9 @@ std::vector<std::string> Cpu::getAvailableGovernors() const
     std::istringstream iss(govs);
     std::string gov;
 
-    while (iss >> gov)
+    while (iss >> gov){
         result.push_back(gov);
+    }
 
     return result;
 }
@@ -59,8 +60,9 @@ std::vector<std::string> Cpu::getAvailableEnergyPerformancePreferences() const
     std::istringstream iss(prefs);
     std::string pref;
 
-    while (iss >> pref)
+    while (iss >> pref){
         result.push_back(pref);
+    }
 
     return result;
 }
@@ -69,12 +71,12 @@ std::vector<std::string> Cpu::getAvailableEnergyPerformancePreferences() const
 double Cpu::getFreqWrapper(const std::string& freqPath) const
 {
     std::string rawFreqStr = Sysfs::read(freqPath);
-    return std::stod(rawFreqStr) / 1000.0; // Convert kHz to MHz
+    return std::stod(rawFreqStr) / KHZ_TO_MHZ; // Convert kHz to MHz
 }
 
-bool Cpu::isfreqWithinCpuInfoBounds(double freqMHz) const
+bool Cpu::isfreqWithinCpuInfoBounds(uint64_t freqKHz) const
 {
-    return (freqMHz >= this->cpuInfoMinFreq) && (freqMHz <= this->cpuInfoMaxFreq);
+    return (freqKHz >= this->cpuInfoMinFreq) && (freqKHz <= this->cpuInfoMaxFreq);
 }
 
 uint64_t Cpu::getCpuInfoFreq(const std::string_view freqPath) const
@@ -108,12 +110,12 @@ double Cpu::getScalingMaxFreq() const
 
 double Cpu::getCpuInfoMinFreq() const
 {
-    return static_cast<double>(cpuInfoMinFreq) / 1000.0;
+    return static_cast<double>(cpuInfoMinFreq) / KHZ_TO_MHZ;
 }
 
 double Cpu::getCpuInfoMaxFreq() const
 {
-    return static_cast<double>(cpuInfoMaxFreq) / 1000.0;
+    return static_cast<double>(cpuInfoMaxFreq) / KHZ_TO_MHZ;
 }
 
 bool Cpu::setScalingMinFreq(double freqMHz) const
@@ -138,7 +140,7 @@ bool Cpu::setScalingMaxFreq(double freqMHz) const
 bool Cpu::setGovernor(const std::string& governor)
 {
 
-    for (auto& gov : getAvailableGovernors()) {
+    for (const auto& gov : getAvailableGovernors()) {
         if (gov == governor) {
             std::string recommendedEPP = getRecommendedEPP(governor);
             if (setEnergyPerformancePreference(recommendedEPP)) {
@@ -146,7 +148,7 @@ bool Cpu::setGovernor(const std::string& governor)
             }
             else {
                 // !TODO: consider throwing an exception
-                std::cerr << "Failed to set EPP to " << recommendedEPP << " for governor " << governor << std::endl;
+                std::cerr << "Failed to set EPP to " << recommendedEPP << " for governor " << governor << "\n";
                 return false;
             }
         }
@@ -155,7 +157,7 @@ bool Cpu::setGovernor(const std::string& governor)
 }
 bool Cpu::setEnergyPerformancePreference(const std::string& preference)
 {
-    for (auto& pref : getAvailableEnergyPerformancePreferences()) {
+    for (const auto& pref : getAvailableEnergyPerformancePreferences()) {
         if (pref == preference) {
             return Sysfs::write(path_builder(CpuPaths::ENERGY_PERFORMANCE_PREFERENCE), preference);
         }
@@ -177,10 +179,12 @@ std::vector<int> Cpu::getRelatedCpus() const
     std::string relatedCpus = Sysfs::read(path_builder(CpuPaths::RELATED_CPUS));
     std::vector<int> result;
     std::istringstream iss(relatedCpus);
-    int cpuId;
+    int cpuId = 0;
 
     while (iss >> cpuId)
+    {
         result.push_back(cpuId);
+    }
 
     return result;
 }
@@ -192,20 +196,23 @@ std::string Cpu::getScalingDriverName() const
 
 void Cpu::printInfo() const
 {
-    std::cout << "CPU " << id << " Info:" << std::endl;
-    std::cout << "  Governor: " << getGovernor() << std::endl;
+    std::cout << "CPU " << id << " Info:" << "\n";
+    std::cout << "  Governor: " << getGovernor() << "\n";
     std::cout << "  Available Governors: ";
     for (const auto& gov : getAvailableGovernors())
+    {
         std::cout << gov << " ";
-    std::cout << std::endl;
-    std::cout << "  Energy Performance Preference: " << getEnergyPerformancePreference() << std::endl;
+    }
+    std::cout << "\n";
+    std::cout << "  Energy Performance Preference: " << getEnergyPerformancePreference() << "\n";
     std::cout << "  Available Energy Performance Preferences: ";
-    for (const auto& pref : getAvailableEnergyPerformancePreferences())
+    for (const auto& pref : getAvailableEnergyPerformancePreferences()){
         std::cout << pref << " ";
-    std::cout << std::endl;
-    std::cout << "  Scaling Current Frequency: " << getScalingCurrentFreq() << " MHz" << std::endl;
-    std::cout << "  Scaling Min Frequency: " << getScalingMinFreq() << " MHz" << std::endl;
-    std::cout << "  Scaling Max Frequency: " << getScalingMaxFreq() << " MHz" << std::endl;
-    std::cout << "  CPU Info Min Frequency: " << getCpuInfoMinFreq() << " MHz" << std::endl;
-    std::cout << "  CPU Info Max Frequency: " << getCpuInfoMaxFreq() << " MHz" << std::endl;
+    }
+    std::cout << "\n";
+    std::cout << "  Scaling Current Frequency: " << getScalingCurrentFreq() << " MHz" << "\n";
+    std::cout << "  Scaling Min Frequency: " << getScalingMinFreq() << " MHz" << "\n";
+    std::cout << "  Scaling Max Frequency: " << getScalingMaxFreq() << " MHz" << "\n";
+    std::cout << "  CPU Info Min Frequency: " << getCpuInfoMinFreq() << " MHz" << "\n";
+    std::cout << "  CPU Info Max Frequency: " << getCpuInfoMaxFreq() << " MHz" << "\n";
 }

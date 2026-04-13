@@ -8,12 +8,13 @@ int main()
     try {
 
         CpuManager cpuManager;
-        // cpuManager.showAllCpuInfo();
-        // cpuManager.showAllCpuFrequencies();
+        cpuManager.showAllCpuInfo();
+        cpuManager.showAllCpuFrequencies();
         // cpuManager.applyGovernorToAll("powersave");
         cpuManager.printCpuDomainInfo();
         Cpu cpu0(0);
-        std::cout << cpu0.getScalingDriverName();
+        std::cout << cpu0.getScalingDriverName() << "\n";
+        std::cout << cpu0.setScalingMinFreq(800.0);
         // std::cout << cpu0.setGovernor("powersave");
     }
     catch (const std::exception& e) {
