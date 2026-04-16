@@ -1,13 +1,7 @@
 ---
-Checks:          'clang-diagnostic-*,clang-analyzer-*,bugprone-*,cert-*,cppcoreguidelines-*,google-*,hicpp-*,modernize-*,performance-*,portability-*,readability-*,-modernize-use-trailing-return-type,-clang-diagnostic-unused-function'
+Checks:          '-*,clang-diagnostic-*,clang-analyzer-*,boost-*,bugprone-*,cert-*,cppcoreguidelines-*,google-*,hicpp-*,modernize-*,performance-*,portability-*,readability-*,-modernize-use-trailing-return-type,-clang-diagnostic-unused-function'
 WarningsAsErrors: ''
 HeaderFilterRegex: '.*'
 FormatStyle:     file
 CheckOptions:
-  - key:             readability-identifier-naming.VariableCase
-    value:           lower_case
-  - key:             readability-identifier-naming.ClassCase
-    value:           CamelCase
-  - key:             readability-identifier-naming.FunctionCase
-    value:           camelCase
 ...

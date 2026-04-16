@@ -12,7 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Find clang-tidy
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(CLANG_TIDY_EXE)
-    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE};-checks=-*,boost-*,bugprone-*,cert-*,cppcoreguidelines-*,clang-analyzer-*,google-*,hicpp-*,modernize-*,performance-*,portability-*,readability-*,-modernize-use-trailing-return-type")
+    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
     message(STATUS "Found clang-tidy: ${CLANG_TIDY_EXE}")
 else()
     message(WARNING "clang-tidy not found")
