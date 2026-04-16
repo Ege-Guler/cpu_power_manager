@@ -40,7 +40,7 @@ class Cpu
 
     std::string path_builder(std::string_view templatePath) const;
 
-    double getFreqWrapper(const std::string& freqPath) const;
+    static double getFreqWrapper(const std::string& freqPath);
 
     bool isfreqWithinCpuInfoBounds(uint64_t freqKHz) const;
 
@@ -79,7 +79,7 @@ class Cpu
     void setGovernor(const std::string& governor);
     bool setEnergyPerformancePreference(const std::string& preference);
 
-    std::string getRecommendedEPP(const std::string& governor) const;
+    static std::string getRecommendedEPP(const std::string& governor);
 
     std::vector<int> getRelatedCpus() const;
 

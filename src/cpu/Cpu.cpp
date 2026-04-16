@@ -68,7 +68,7 @@ std::vector<std::string> Cpu::getAvailableEnergyPerformancePreferences() const
 }
 
 // Getters
-double Cpu::getFreqWrapper(const std::string& freqPath) const
+double Cpu::getFreqWrapper(const std::string& freqPath)
 {
     std::string rawFreqStr = Sysfs::read(freqPath);
     return std::stod(rawFreqStr) * KHZ_TO_GHZ; // Convert kHz to GHz
