@@ -10,14 +10,15 @@ std::string read(const std::string& path)
         throw std::runtime_error("Error: Could not open file " + path + " for reading");
     }
 
-    std::stringstream ss;
-    ss << file.rdbuf();
+    std::stringstream stream;
+    stream << file.rdbuf();
 
-    std::string result = ss.str();
+    std::string result = stream.str();
 
     // remove trailing newline
-    if (!result.empty() && result.back() == '\n')
+    if (!result.empty() && result.back() == '\n') {
         result.pop_back();
+    }
 
     return result;
 }
