@@ -118,42 +118,40 @@ double Cpu::getCpuInfoMaxFreq() const
     return static_cast<double>(cpuInfoMaxFreq) * KHZ_TO_GHZ;
 }
 
-bool Cpu::setScalingMinFreq(double freqGHz)
+void Cpu::setScalingMinFreq(double freqGHz)
 {
 
     uint64_t freqKHz = static_cast<uint64_t>(freqGHz * GHZ_TO_KHZ);
-    if (this->isfreqWithinCpuInfoBounds(freqKHz)) {
-        return Sysfs::write(path_builder(CpuPaths::SCALING_MIN_FREQ), std::to_string(freqKHz));
+    if (!this->isfreqWithinCpuInfoBounds(freqKHz)) {
+        throw std::out_of_range("Requested frequency " + std::to_string(freqGHz) + " GHz is out of CPU info bounds (" +
+                                std::to_string(getCpuInfoMinFreq()) + " GHz - " + std::to_string(getCpuInfoMaxFreq()) + " GHz)");
     }
-    return false; // Requested frequency is out of CPU info bounds
+    Sysfs::write(path_builder(CpuPaths::SCALING_MIN_FREQ), std::to_string(freqKHz));
 }
-bool Cpu::setScalingMaxFreq(double freqGHz)
+void Cpu::setScalingMaxFreq(double freqGHz)
 {
 
     uint64_t freqKHz = static_cast<uint64_t>(freqGHz * KHZ_TO_GHZ);
-    if (this->isfreqWithinCpuInfoBounds(freqKHz)) {
-        return Sysfs::write(path_builder(CpuPaths::SCALING_MAX_FREQ), std::to_string(freqKHz));
-    }
-    return false; // Requested frequency is out of CPU info bounds
+    if (!this->isfreqWithinCpuInfoBounds(freqKHz)) {
+        throw std::out_of_range("Requested frequency " + std::to_string(freqGHz) + " GHz is out of CPU info bounds (" +
+                                std::to_string(getCpuInfoMinFreq()) + " GHz - " + std::to_string(getCpuInfoMaxFreq()) + " GHz)");
+        }
+    Sysfs::write(path_builder(CpuPaths::SCALING_MAX_FREQ), std::to_string(freqKHz));
 }
 
-bool Cpu::setGovernor(const std::string& governor)
+void Cpu::setGovernor(const std::string& governor)
 {
 
     for (const auto& gov : getAvailableGovernors()) {
         if (gov == governor) {
             std::string recommendedEPP = getRecommendedEPP(governor);
-            if (setEnergyPerformancePreference(recommendedEPP)) {
-                return Sysfs::write(path_builder(CpuPaths::SCALING_GOVERNOR), governor);
+            if (!setEnergyPerformancePreference(recommendedEPP)) {
+                throw std::runtime_error("Failed to set recommended Energy Performance Preference '" + recommendedEPP +
+                                         "' for governor '" + governor + "'.");
             }
-            else {
-                // !TODO: consider throwing an exception
-                std::cerr << "Failed to set EPP to " << recommendedEPP << " for governor " << governor << "\n";
-                return false;
-            }
+            Sysfs::write(path_builder(CpuPaths::SCALING_GOVERNOR), governor);
         }
     }
-    return false; // Governor not found in available governors
 }
 bool Cpu::setEnergyPerformancePreference(const std::string& preference)
 {

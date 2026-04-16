@@ -82,8 +82,12 @@ bool CpuManager::applyGovernorToAll(const std::string& governor)
     // !TODO: consider adding a check to see if the governor is supported by all CPUs before attempting to set it
     bool success = true;
     for (auto& cpu : cpus) {
-        if (!cpu.setGovernor(governor)) {
-            std::cerr << "Failed to set governor '" << governor << "' for CPU " << cpu.getId() << "\n";
+
+        try {
+            cpu.setGovernor(governor);
+        }
+        catch (const std::exception& e) {
+            std::cerr << "Failed to set governor '" << governor << "' for CPU " << cpu.getId() << ": " << e.what() << "\n";
             success = false; // Continue trying to set for other CPUs, but mark overall failure
         }
     }
