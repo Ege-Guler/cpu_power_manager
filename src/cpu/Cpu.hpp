@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <algorithm>
 
 #include "constants.hpp"
 #include "sysfs/Sysfs.hpp"

@@ -155,19 +155,19 @@ void Cpu::setGovernor(const std::string& governor)
 }
 bool Cpu::setEnergyPerformancePreference(const std::string& preference)
 {
-    for (const auto& pref : getAvailableEnergyPerformancePreferences()) {
-        if (pref == preference) {
-            return Sysfs::write(path_builder(CpuPaths::ENERGY_PERFORMANCE_PREFERENCE), preference);
-        }
+    const auto availablePreferences = getAvailableEnergyPerformancePreferences();
+    if(std::any_of(availablePreferences.begin(), availablePreferences.end(),
+                    [&preference](const std::string& pref) { return pref == preference; })) {
+         return Sysfs::write(path_builder(CpuPaths::ENERGY_PERFORMANCE_PREFERENCE), preference);
     }
     return false; // Preference not found in available preferences
 }
 
-std::string Cpu::getRecommendedEPP(const std::string& governor) const
+std::string Cpu::getRecommendedEPP(const std::string& governor)
 {
-    auto it = m_governorEppMap.find(governor);
-    if (it != m_governorEppMap.end()) {
-        return it->second;
+    auto found = m_governorEppMap.find(governor);   
+    if (found != m_governorEppMap.end()) {
+        return found->second;
     }
     return DEFAULT_EPP;
 }
