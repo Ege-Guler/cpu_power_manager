@@ -1,20 +1,18 @@
 #include "CpuManager.hpp"
 
-CpuManager::CpuManager()
+CpuManager::CpuManager() : cpuCount(getCpuCount())
 {
     discoverCpus();
     this->relatedCpuDomains = getRelatedCpuDomains();
 }
 
-unsigned int CpuManager::getCpuCount() const
+unsigned int CpuManager::getCpuCount()  
 {
     return std::thread::hardware_concurrency();
 }
 
 void CpuManager::discoverCpus()
 {
-    this->cpuCount = getCpuCount();
-
     cpus.clear();
     int cpuId = 0;
 

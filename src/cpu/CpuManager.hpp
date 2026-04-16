@@ -33,7 +33,7 @@ class CpuManager
     std::vector<Cpu> cpus;
 
     unsigned int cpuCount;
-    unsigned int getCpuCount() const;
+    static unsigned int getCpuCount();
     std::map<int, std::set<int>> relatedCpuDomains;
 
     std::map<int, std::set<int>> getRelatedCpuDomains() const;
