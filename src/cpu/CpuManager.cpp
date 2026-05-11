@@ -4,11 +4,38 @@ CpuManager::CpuManager() : cpuCount(getCpuCount())
 {
     discoverCpus();
     this->relatedCpuDomains = getRelatedCpuDomains();
+    this->commonGovernors = getCommonCpuGovernors();
 }
 
 unsigned int CpuManager::getCpuCount()  
 {
     return std::thread::hardware_concurrency();
+}
+
+const std::vector<std::string> CpuManager::getCommonCpuGovernors() const
+{
+    std::vector<std::string> commonGovernorsVector;
+
+    if (cpus.empty()) {
+        return commonGovernorsVector; // Return empty if no CPUs are found
+    }
+
+    // Start with the available governors of the first CPU
+    commonGovernorsVector = cpus[0].getAvailableGovernors();
+
+    // Intersect with the available governors of the remaining CPUs
+    for (size_t i = 1; i < cpus.size(); i++) {
+        std::vector<std::string> cpuGovernors = cpus[i].getAvailableGovernors();
+        std::vector<std::string> tempCommon;
+
+        std::set_intersection(commonGovernorsVector.begin(), commonGovernorsVector.end(),
+                              cpuGovernors.begin(), cpuGovernors.end(),
+                              std::back_inserter(tempCommon));
+
+        commonGovernorsVector = std::move(tempCommon); // Update common governors
+    }
+
+    return commonGovernorsVector;
 }
 
 void CpuManager::discoverCpus()
@@ -56,6 +83,14 @@ void CpuManager::listAllCpuGovernors() const
         std::cout << "CPU " << std::format("{:>2}: {}", cpu.getId(), cpu.getGovernor()) << "\n";
     }
 }
+void CpuManager::listCommonAvailableGovernors() const
+{
+    std::cout << "Common Available Governors for All CPUs:\n";
+    for (const auto& gov : this->commonGovernors) {
+        std::cout << gov << "\n";
+    }
+}
+
 
 std::map<int, std::set<int>> CpuManager::getRelatedCpuDomains() const
 {

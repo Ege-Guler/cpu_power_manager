@@ -22,7 +22,7 @@ class CpuManager
     void showAllCpuInfo() const;
     void showAllCpuFrequencies() const;
     void listAllCpuGovernors() const;
-    void listAllAvailableGovernors() const;
+    void listCommonAvailableGovernors() const;
 
     bool applyGovernorToAll(const std::string& governor);
     bool isGovernorSupportedByAll(const std::string& governor) const;
@@ -31,10 +31,12 @@ class CpuManager
 
   private:
     std::vector<Cpu> cpus;
-
+    std::vector<std::string> commonGovernors;
     unsigned int cpuCount;
-    static unsigned int getCpuCount();
     std::map<int, std::set<int>> relatedCpuDomains;
+    
+    static unsigned int getCpuCount();
+    const std::vector<std::string> getCommonCpuGovernors() const;
 
     std::map<int, std::set<int>> getRelatedCpuDomains() const;
 };
