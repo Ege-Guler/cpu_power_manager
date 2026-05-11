@@ -9,6 +9,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Enable compile commands for clang-tidy
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Dependencies
+include (FetchContent)
+FetchContent_Declare(
+    CLI11
+    GIT_REPOSITORY https://github.com/CLIUtils/CLI11
+    GIT_TAG v2.6.2
+)
+FetchContent_MakeAvailable(CLI11)
+
 # Find clang-tidy
 find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
 if(CLANG_TIDY_EXE)
@@ -46,6 +55,8 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
 )
 
 add_executable(cpu-power ${SOURCES})
+
+target_link_libraries(cpu-power PRIVATE CLI11::CLI11)
 
 target_include_directories(cpu-power PRIVATE
     ${CMAKE_SOURCE_DIR}/src
