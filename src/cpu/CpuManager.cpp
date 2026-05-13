@@ -127,6 +127,20 @@ bool CpuManager::applyGovernorToAll(const std::string& governor)
     return success;
 }
 
+void CpuManager::applyScalingMinFreqToAll(double freqGHz)
+{
+    for (auto& cpu : this->cpus) {
+        cpu.setScalingMinFreq(freqGHz);
+    }
+}
+
+void CpuManager::applyScalingMaxFreqToAll(double freqGHz)
+{
+    for (auto& cpu : this->cpus) {
+        cpu.setScalingMaxFreq(freqGHz);
+    }
+}
+
 void CpuManager::printCpuDomainInfo() const
 {
     std::cout << "CPU Domains (related CPUs):\n";

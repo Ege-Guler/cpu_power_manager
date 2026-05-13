@@ -24,7 +24,9 @@ class CpuManager
     void listCommonAvailableGovernors() const;
 
     bool applyGovernorToAll(const std::string& governor);
-    bool isGovernorSupportedByAll(const std::string& governor) const;
+    
+    void applyScalingMinFreqToAll(double freqGHz);
+    void applyScalingMaxFreqToAll(double freqGHz);
 
     void printCpuDomainInfo() const;
 
