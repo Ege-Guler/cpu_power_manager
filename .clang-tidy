@@ -1,0 +1,7 @@
+---
+Checks:          '-*,clang-diagnostic-*,clang-analyzer-*,boost-*,bugprone-*,cert-*,cppcoreguidelines-*,google-*,hicpp-*,modernize-*,performance-*,portability-*,readability-*,-modernize-use-trailing-return-type,-clang-diagnostic-unused-function'
+WarningsAsErrors: ''
+HeaderFilterRegex: '.*'
+FormatStyle:     file
+CheckOptions:
+...
