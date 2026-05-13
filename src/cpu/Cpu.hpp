@@ -86,5 +86,6 @@ class Cpu
 
     std::string getScalingDriverName() const;
 
+    void printScalingFrequencyInfo() const;
     void printInfo() const;
 };

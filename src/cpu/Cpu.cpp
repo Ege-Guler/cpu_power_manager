@@ -192,6 +192,11 @@ std::string Cpu::getScalingDriverName() const
     return Sysfs::read(path_builder(CpuPaths::SCALING_DRIVER));
 }
 
+void Cpu::printScalingFrequencyInfo() const
+{
+    std::cout << "CPU " << std::format("{:>2}: {:>7.2f}", getId(), getScalingCurrentFreq()) << "\n";
+}
+
 void Cpu::printInfo() const
 {
     std::cout << "CPU " << id << " Info:" << "\n";

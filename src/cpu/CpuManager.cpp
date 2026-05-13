@@ -73,17 +73,28 @@ void CpuManager::showSingleCpuInfo(int cpuId) const
     auto it = std::find_if(cpus.begin(), cpus.end(), [cpuId](const Cpu& cpu) { return cpu.getId() == cpuId; });
     if (it != cpus.end()) {
         it->printInfo();
-    } else {
-        throw std::runtime_error(std::format("CPU with ID {} not found.", cpuId
-        ));
+    }
+    else {
+        throw std::runtime_error(std::format("CPU with ID {} not found.", cpuId));
     }
 }
 
-void CpuManager::showAllCpuFrequencies() const
+void CpuManager::showAllCurrentScalingCpuFrequency() const
 {
     std::cout << "Current CPU Frequencies (GHz):\n";
     for (const auto& cpu : cpus) {
-        std::cout << "CPU " << std::format("{:>2}: {:>7.2f}", cpu.getId(), cpu.getScalingCurrentFreq()) << "\n";
+        cpu.printScalingFrequencyInfo();
+    }
+}
+
+void CpuManager::showSingleCurrentScalingCpuFrequency(int cpuId) const
+{
+    auto it = std::find_if(cpus.begin(), cpus.end(), [cpuId](const Cpu& cpu) { return cpu.getId() == cpuId; });
+    if (it != cpus.end()) {
+        std::cout << "CPU " << std::format("{:>2}: {:>7.2f} GHz", it->getId(), it->getScalingCurrentFreq()) << "\n";
+    }
+    else {
+        throw std::runtime_error(std::format("CPU with ID {} not found.", cpuId));
     }
 }
 

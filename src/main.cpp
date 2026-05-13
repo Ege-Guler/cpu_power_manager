@@ -15,8 +15,14 @@ int main(int argc, char* argv[])
         manager.discoverCpus();
 
         if (cfg.activeSubcommand == Subcommand::Info) {
-            if (cfg.showFrequencies)
-                manager.showAllCpuFrequencies();
+            if (cfg.showFrequencies){
+                if(cfg.cpuId >= 0) {
+                    manager.showSingleCurrentScalingCpuFrequency(cfg.cpuId);
+                }
+                else {
+                    manager.showAllCurrentScalingCpuFrequency();
+                }
+            }
             else if (cfg.showGovernors)
                 manager.listAllCpuGovernors();
             else if (cfg.showDomains)
