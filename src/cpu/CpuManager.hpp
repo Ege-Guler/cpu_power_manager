@@ -19,6 +19,7 @@ class CpuManager
     void discoverCpus();
 
     void showAllCpuInfo() const;
+    void showSingleCpuInfo(int cpuId) const;
     void showAllCpuFrequencies() const;
     void listAllCpuGovernors() const;
     void listCommonAvailableGovernors() const;

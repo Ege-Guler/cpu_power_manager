@@ -21,8 +21,14 @@ int main(int argc, char* argv[])
                 manager.listAllCpuGovernors();
             else if (cfg.showDomains)
                 manager.printCpuDomainInfo();
-            else
-                manager.showAllCpuInfo();
+            else{
+                if(cfg.cpuId >= 0) {
+                    manager.showSingleCpuInfo(cfg.cpuId);
+                }
+                else {
+                    manager.showAllCpuInfo();
+                }
+            }
         }
         else if (cfg.activeSubcommand == Subcommand::Set) {
             if (!cfg.governor.empty())
