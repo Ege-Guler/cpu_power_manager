@@ -91,7 +91,7 @@ void CpuManager::showSingleCurrentScalingCpuFrequency(int cpuId) const
 {
     auto it = std::find_if(cpus.begin(), cpus.end(), [cpuId](const Cpu& cpu) { return cpu.getId() == cpuId; });
     if (it != cpus.end()) {
-        std::cout << "CPU " << std::format("{:>2}: {:>7.2f} GHz", it->getId(), it->getScalingCurrentFreq()) << "\n";
+        it->printScalingFrequencyInfo();
     }
     else {
         throw std::runtime_error(std::format("CPU with ID {} not found.", cpuId));
