@@ -29,6 +29,8 @@ class CpuManager
     void listCommonAvailableCpuGovernors() const;
     void listSingleAvailableCpuGovernors(int cpuId) const;
 
+    void listAllCpuFrequencyRanges() const;
+    void listSingleCpuFrequencyRange(int cpuId) const;
 
     bool applyGovernorToAll(const std::string& governor);
     

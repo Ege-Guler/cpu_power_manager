@@ -91,5 +91,6 @@ class Cpu
     void printInfo() const;
 
     void printAvailableGovernors() const;
-
+    void printAvailableFrequencyRange() const;
+    
 };

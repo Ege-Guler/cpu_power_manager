@@ -233,3 +233,11 @@ void Cpu::printAvailableGovernors() const{
     }
     std::cout << "\n";
 }
+
+
+void Cpu::printAvailableFrequencyRange() const
+{
+    std::cout << std::format("CPU {:<6} Available Frequency Range (GHz): {:.2f} - {:.2f}\n",
+                             id, getCpuInfoMinFreq(), getCpuInfoMaxFreq());
+}
+                        

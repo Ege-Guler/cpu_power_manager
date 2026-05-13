@@ -15,12 +15,22 @@ int main(int argc, char* argv[])
         manager.discoverCpus();
 
         if (cfg.activeSubcommand == Subcommand::Info) {
-            if (cfg.showFrequencies){
-                if(cfg.cpuId >= 0) {
-                    manager.showSingleCurrentScalingCpuFrequency(cfg.cpuId);
+            if (cfg.showFrequencies) {
+                if (cfg.showAvailable) {
+                    if (cfg.cpuId >= 0) {
+                        manager.listSingleCpuFrequencyRange(cfg.cpuId);
+                    }
+                    else {
+                        manager.listAllCpuFrequencyRanges();
+                    }
                 }
                 else {
-                    manager.showAllCurrentScalingCpuFrequency();
+                    if (cfg.cpuId >= 0) {
+                        manager.showSingleCurrentScalingCpuFrequency(cfg.cpuId);
+                    }
+                    else {
+                        manager.showAllCurrentScalingCpuFrequency();
+                    }
                 }
             }
             else if (cfg.showGovernors) {

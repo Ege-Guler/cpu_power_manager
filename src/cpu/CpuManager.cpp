@@ -137,6 +137,25 @@ void CpuManager::listSingleAvailableCpuGovernors(int cpuId) const
     }
 }
 
+void CpuManager::listAllCpuFrequencyRanges() const
+{
+    std::cout << "CPU Frequency Ranges (GHz):\n";
+    for (const auto& cpu : cpus) {
+        cpu.printAvailableFrequencyRange();
+    }
+}
+
+void CpuManager::listSingleCpuFrequencyRange(int cpuId) const
+{
+    auto it = std::find_if(cpus.begin(), cpus.end(), [cpuId](const Cpu& cpu) { return cpu.getId() == cpuId; });
+    if (it != cpus.end()) {
+        it->printAvailableFrequencyRange();
+    }
+    else {
+        throw std::runtime_error(std::format("CPU with ID {} not found.", cpuId));
+    }
+}
+
 std::map<int, std::set<int>> CpuManager::getRelatedCpuDomains() const
 {
     std::map<int, std::set<int>> domainMap;
