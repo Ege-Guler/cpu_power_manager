@@ -89,4 +89,7 @@ class Cpu
     void printScalingFrequencyInfo() const;
     void printGovernorInfo() const;
     void printInfo() const;
+
+    void printAvailableGovernors() const;
+
 };

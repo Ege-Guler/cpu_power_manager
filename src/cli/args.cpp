@@ -13,7 +13,8 @@ Config parse_args(int argc, char* argv[]) {
     info->add_flag("--freq", cfg.showFrequencies, "Show CPU frequencies");
     info->add_flag("--governors", cfg.showGovernors, "Show CPU governors");
     info->add_flag("--domains", cfg.showDomains, "Show CPU domain information");
-
+    info->add_flag("--available", cfg.showAvailable, "Show available CPU frequencies and governors");
+    
     // set subcommand
     auto* set = app.add_subcommand("set", "Apply CPU settings");
     set->add_option("-c,--cpu", cfg.cpuId, "Select CPU")->default_val(-1);

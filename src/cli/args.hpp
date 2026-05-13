@@ -15,6 +15,7 @@ struct Config {
     bool showFrequencies = false;
     bool showGovernors   = false;
     bool showDomains     = false;
+    bool showAvailable   = false;
     int  cpuId           = -1;     // -1 = all CPUs
 
     // set        apply settings

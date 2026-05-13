@@ -224,3 +224,12 @@ void Cpu::printInfo() const
     std::cout << "  CPU Info Min Frequency: " << getCpuInfoMinFreq() << " GHz" << "\n";
     std::cout << "  CPU Info Max Frequency: " << getCpuInfoMaxFreq() << " GHz" << "\n";
 }
+
+void Cpu::printAvailableGovernors() const{
+    std::cout << "CPU " << id << " Available Governors: ";
+    for (const auto& gov : getAvailableGovernors())
+    {
+        std::cout << gov << " ";
+    }
+    std::cout << "\n";
+}

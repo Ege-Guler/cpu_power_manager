@@ -25,8 +25,10 @@ class CpuManager
 
     void listAllCurrentCpuGovernors() const;
     void listSingleCurrentCpuGovernor(int cpuId) const;
-    
-    void listCommonAvailableGovernors() const;
+
+    void listCommonAvailableCpuGovernors() const;
+    void listSingleAvailableCpuGovernors(int cpuId) const;
+
 
     bool applyGovernorToAll(const std::string& governor);
     

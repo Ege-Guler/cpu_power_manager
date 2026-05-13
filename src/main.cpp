@@ -23,16 +23,23 @@ int main(int argc, char* argv[])
                     manager.showAllCurrentScalingCpuFrequency();
                 }
             }
-            else if (cfg.showGovernors){
-                if (cfg.cpuId >= 0)
-                {
-                    manager.listSingleCurrentCpuGovernor(cfg.cpuId);
+            else if (cfg.showGovernors) {
+                if (cfg.showAvailable) {
+                    if (cfg.cpuId >= 0) {
+                        manager.listSingleAvailableCpuGovernors(cfg.cpuId);
+                    }
+                    else {
+                        manager.listCommonAvailableCpuGovernors();
+                    }
                 }
-                else
-                {
-                    manager.listAllCurrentCpuGovernors();   
+                else {
+                    if (cfg.cpuId >= 0) {
+                        manager.listSingleCurrentCpuGovernor(cfg.cpuId);
+                    }
+                    else {
+                        manager.listAllCurrentCpuGovernors();
+                    }
                 }
-                
             }
             else if (cfg.showDomains)
                 manager.printCpuDomainInfo();

@@ -117,14 +117,25 @@ void CpuManager::listSingleCurrentCpuGovernor(int cpuId) const
     }
 }
 
-void CpuManager::listCommonAvailableGovernors() const
+void CpuManager::listCommonAvailableCpuGovernors() const
 {
-    std::cout << "Common Available Governors for All CPUs:\n";
+    std::cout << "Common Available Governors for All CPUs: ";
     for (const auto& gov : this->commonGovernors) {
-        std::cout << gov << "\n";
+        std::cout << gov << " ";
     }
+    std::cout << "\n";
 }
 
+void CpuManager::listSingleAvailableCpuGovernors(int cpuId) const
+{
+    auto it = std::find_if(cpus.begin(), cpus.end(), [cpuId](const Cpu& cpu) { return cpu.getId() == cpuId; });
+    if (it != cpus.end()) {
+        it->printAvailableGovernors();
+    }
+    else {
+        throw std::runtime_error(std::format("CPU with ID {} not found.", cpuId));
+    }
+}
 
 std::map<int, std::set<int>> CpuManager::getRelatedCpuDomains() const
 {
