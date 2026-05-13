@@ -23,8 +23,17 @@ int main(int argc, char* argv[])
                     manager.showAllCurrentScalingCpuFrequency();
                 }
             }
-            else if (cfg.showGovernors)
-                manager.listAllCpuGovernors();
+            else if (cfg.showGovernors){
+                if (cfg.cpuId >= 0)
+                {
+                    manager.listSingleCurrentCpuGovernor(cfg.cpuId);
+                }
+                else
+                {
+                    manager.listAllCurrentCpuGovernors();   
+                }
+                
+            }
             else if (cfg.showDomains)
                 manager.printCpuDomainInfo();
             else{

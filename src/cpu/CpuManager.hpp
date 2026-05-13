@@ -23,7 +23,9 @@ class CpuManager
     void showAllCurrentScalingCpuFrequency() const;
     void showSingleCurrentScalingCpuFrequency(int cpuId) const;
 
-    void listAllCpuGovernors() const;
+    void listAllCurrentCpuGovernors() const;
+    void listSingleCurrentCpuGovernor(int cpuId) const;
+    
     void listCommonAvailableGovernors() const;
 
     bool applyGovernorToAll(const std::string& governor);

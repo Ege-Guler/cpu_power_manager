@@ -98,13 +98,25 @@ void CpuManager::showSingleCurrentScalingCpuFrequency(int cpuId) const
     }
 }
 
-void CpuManager::listAllCpuGovernors() const
+void CpuManager::listAllCurrentCpuGovernors() const
 {
     std::cout << "Current CPU Governors:\n";
     for (const auto& cpu : cpus) {
-        std::cout << "CPU " << std::format("{:>2}: {}", cpu.getId(), cpu.getGovernor()) << "\n";
+        cpu.printGovernorInfo();
     }
 }
+
+void CpuManager::listSingleCurrentCpuGovernor(int cpuId) const
+{
+    auto it = std::find_if(cpus.begin(), cpus.end(), [cpuId](const Cpu& cpu) { return cpu.getId() == cpuId; });
+    if (it != cpus.end()) {
+        it->printGovernorInfo();
+    }
+    else {
+        throw std::runtime_error(std::format("CPU with ID {} not found.", cpuId));
+    }
+}
+
 void CpuManager::listCommonAvailableGovernors() const
 {
     std::cout << "Common Available Governors for All CPUs:\n";

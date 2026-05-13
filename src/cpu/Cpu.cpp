@@ -197,6 +197,11 @@ void Cpu::printScalingFrequencyInfo() const
     std::cout << "CPU " << std::format("{:>2}: {:>7.2f}", getId(), getScalingCurrentFreq()) << "\n";
 }
 
+void Cpu::printGovernorInfo() const
+{
+    std::cout << "CPU " << std::format("{:>2}: {}", getId(), getGovernor()) << "\n";
+}
+
 void Cpu::printInfo() const
 {
     std::cout << "CPU " << id << " Info:" << "\n";
