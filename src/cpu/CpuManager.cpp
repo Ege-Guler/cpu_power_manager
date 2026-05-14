@@ -7,20 +7,21 @@ CpuManager::CpuManager() : cpuCount(getCpuCount())
     this->commonGovernors = getCommonCpuGovernors();
 }
 
-unsigned int CpuManager::getCpuCount()  
+unsigned int CpuManager::getCpuCount()
 {
     return std::thread::hardware_concurrency();
 }
 
-std::string CpuManager::getCommonAvailableCpuGovernorsString() const{
+std::string CpuManager::getCommonAvailableCpuGovernorsString() const
+{
     std::string governors;
     for (const auto& gov : commonGovernors) {
-        if (!governors.empty()) governors += ' ';
+        if (!governors.empty())
+            governors += ' ';
         governors += gov;
     }
     return governors;
 }
-
 
 const std::vector<std::string> CpuManager::getCommonCpuGovernors() const
 {
@@ -38,9 +39,8 @@ const std::vector<std::string> CpuManager::getCommonCpuGovernors() const
         std::vector<std::string> cpuGovernors = cpus[i].getAvailableGovernors();
         std::vector<std::string> tempCommon;
 
-        std::set_intersection(commonGovernorsVector.begin(), commonGovernorsVector.end(),
-                              cpuGovernors.begin(), cpuGovernors.end(),
-                              std::back_inserter(tempCommon));
+        std::set_intersection(commonGovernorsVector.begin(), commonGovernorsVector.end(), cpuGovernors.begin(),
+                              cpuGovernors.end(), std::back_inserter(tempCommon));
 
         commonGovernorsVector = std::move(tempCommon); // Update common governors
     }
@@ -187,19 +187,21 @@ void CpuManager::setAllCpuGovernors(const std::string& governor)
 {
 
     if (!std::any_of(commonGovernors.begin(), commonGovernors.end(),
-                        [&governor](const std::string& gov) { return gov == governor; })) {
-        throw std::runtime_error(std::format("Governor '{}' is not supported by all CPUs.\nCommon governors: {}.", governor, getCommonAvailableCpuGovernorsString()));
+                     [&governor](const std::string& gov) { return gov == governor; })) {
+        throw std::runtime_error(std::format("Governor '{}' is not supported by all CPUs.\nCommon governors: {}.",
+                                             governor, getCommonAvailableCpuGovernorsString()));
     }
-    try{
-        for(auto it = cpus.begin(); it != cpus.end(); ++it) {
+    try {
+        for (auto it = cpus.begin(); it != cpus.end(); ++it) {
             if (it->getGovernor() != governor) {
                 it->setGovernor(governor);
             }
         }
-    }catch (const std::exception& e) {
-        throw std::runtime_error(std::format("Failed to set governor '{}' for all CPUs.\nHint: try running with sudo or as root.", governor));
     }
-
+    catch (const std::exception& e) {
+        throw std::runtime_error(std::format(
+            "Failed to set governor '{}' for all CPUs.\nHint: try running with sudo or as root.", governor));
+    }
 }
 
 void CpuManager::applyScalingMinFreqToAll(double freqGHz)

@@ -53,8 +53,8 @@ int main(int argc, char* argv[])
             }
             else if (cfg.showDomains)
                 manager.printCpuDomainInfo();
-            else{
-                if(cfg.cpuId >= 0) {
+            else {
+                if (cfg.cpuId >= 0) {
                     manager.showSingleCpuInfo(cfg.cpuId);
                 }
                 else {
