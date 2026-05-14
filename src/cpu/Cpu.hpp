@@ -1,11 +1,11 @@
 #pragma once
+#include <algorithm>
 #include <filesystem>
 #include <format>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include <algorithm>
 
 #include "constants.hpp"
 #include "sysfs/Sysfs.hpp"
@@ -14,7 +14,6 @@
 Class for representing a single CPU core.
 
 */
-
 
 class Cpu
 {
@@ -48,7 +47,6 @@ class Cpu
     uint64_t getCpuInfoFreq(const std::string_view freqPath) const;
 
   public:
-    
     static constexpr double KHZ_TO_GHZ = 1.0 / 1E6;
     static constexpr double GHZ_TO_KHZ = 1E6;
 
@@ -89,8 +87,8 @@ class Cpu
 
     void printAvailableGovernors() const;
     void printAvailableFrequencyRange() const;
-  
-  private: //!TODO check which of the public methods can be private
+
+  private: //! TODO check which of the public methods can be private
     bool setEnergyPerformancePreference(const std::string& preference);
     static std::string getRecommendedEPP(const std::string& governor);
 };

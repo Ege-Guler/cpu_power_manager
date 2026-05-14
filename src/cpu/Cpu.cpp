@@ -41,7 +41,7 @@ std::vector<std::string> Cpu::getAvailableGovernors() const
     std::istringstream iss(govs);
     std::string gov;
 
-    while (iss >> gov){
+    while (iss >> gov) {
         result.push_back(gov);
     }
 
@@ -60,7 +60,7 @@ std::vector<std::string> Cpu::getAvailableEnergyPerformancePreferences() const
     std::istringstream iss(prefs);
     std::string pref;
 
-    while (iss >> pref){
+    while (iss >> pref) {
         result.push_back(pref);
     }
 
@@ -146,8 +146,9 @@ void Cpu::setGovernor(const std::string& governor)
         if (gov == governor) {
             std::string recommendedEPP = getRecommendedEPP(governor);
             if (!setEnergyPerformancePreference(recommendedEPP)) {
-                throw std::runtime_error(std::format("Failed to set recommended Energy Performance Preference '{}' for governor '{}'.",
-                                                     recommendedEPP, governor));
+                throw std::runtime_error(
+                    std::format("Failed to set recommended Energy Performance Preference '{}' for governor '{}'.",
+                                recommendedEPP, governor));
             }
             Sysfs::write(path_builder(CpuPaths::SCALING_GOVERNOR), governor);
         }
@@ -156,16 +157,16 @@ void Cpu::setGovernor(const std::string& governor)
 bool Cpu::setEnergyPerformancePreference(const std::string& preference)
 {
     const auto availablePreferences = getAvailableEnergyPerformancePreferences();
-    if(std::any_of(availablePreferences.begin(), availablePreferences.end(),
+    if (std::any_of(availablePreferences.begin(), availablePreferences.end(),
                     [&preference](const std::string& pref) { return pref == preference; })) {
-         return Sysfs::write(path_builder(CpuPaths::ENERGY_PERFORMANCE_PREFERENCE), preference);
+        return Sysfs::write(path_builder(CpuPaths::ENERGY_PERFORMANCE_PREFERENCE), preference);
     }
     return false; // Preference not found in available preferences
 }
 
 std::string Cpu::getRecommendedEPP(const std::string& governor)
 {
-    auto found = m_governorEppMap.find(governor);   
+    auto found = m_governorEppMap.find(governor);
     if (found != m_governorEppMap.end()) {
         return found->second;
     }
@@ -179,8 +180,7 @@ std::vector<int> Cpu::getRelatedCpus() const
     std::istringstream iss(relatedCpus);
     int cpuId = 0;
 
-    while (iss >> cpuId)
-    {
+    while (iss >> cpuId) {
         result.push_back(cpuId);
     }
 
@@ -207,14 +207,13 @@ void Cpu::printInfo() const
     std::cout << "CPU " << id << " Info:" << "\n";
     std::cout << "  Governor: " << getGovernor() << "\n";
     std::cout << "  Available Governors: ";
-    for (const auto& gov : getAvailableGovernors())
-    {
+    for (const auto& gov : getAvailableGovernors()) {
         std::cout << gov << " ";
     }
     std::cout << "\n";
     std::cout << "  Energy Performance Preference: " << getEnergyPerformancePreference() << "\n";
     std::cout << "  Available Energy Performance Preferences: ";
-    for (const auto& pref : getAvailableEnergyPerformancePreferences()){
+    for (const auto& pref : getAvailableEnergyPerformancePreferences()) {
         std::cout << pref << " ";
     }
     std::cout << "\n";
@@ -225,19 +224,17 @@ void Cpu::printInfo() const
     std::cout << "  CPU Info Max Frequency: " << getCpuInfoMaxFreq() << " GHz" << "\n";
 }
 
-void Cpu::printAvailableGovernors() const{
+void Cpu::printAvailableGovernors() const
+{
     std::cout << "CPU " << id << " Available Governors: ";
-    for (const auto& gov : getAvailableGovernors())
-    {
+    for (const auto& gov : getAvailableGovernors()) {
         std::cout << gov << " ";
     }
     std::cout << "\n";
 }
 
-
 void Cpu::printAvailableFrequencyRange() const
 {
-    std::cout << std::format("CPU {:<6} Available Frequency Range (GHz): {:.2f} - {:.2f}\n",
-                             id, getCpuInfoMinFreq(), getCpuInfoMaxFreq());
+    std::cout << std::format("CPU {:<6} Available Frequency Range (GHz): {:.2f} - {:.2f}\n", id, getCpuInfoMinFreq(),
+                             getCpuInfoMaxFreq());
 }
-                        
