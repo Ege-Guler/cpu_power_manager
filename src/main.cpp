@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
         }
         else if (cfg.activeSubcommand == Subcommand::Set) {
             if (!cfg.governor.empty())
-                manager.applyGovernorToAll(cfg.governor);
+                manager.setAllCpuGovernors(cfg.governor);
             if (cfg.minFreq > 0.0) {
                 if (cfg.cpuId >= 0) {
                     Cpu cpu(cfg.cpuId);

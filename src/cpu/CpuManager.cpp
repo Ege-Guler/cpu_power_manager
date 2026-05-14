@@ -12,6 +12,16 @@ unsigned int CpuManager::getCpuCount()
     return std::thread::hardware_concurrency();
 }
 
+std::string CpuManager::getCommonAvailableCpuGovernorsString() const{
+    std::string governors;
+    for (const auto& gov : commonGovernors) {
+        if (!governors.empty()) governors += ' ';
+        governors += gov;
+    }
+    return governors;
+}
+
+
 const std::vector<std::string> CpuManager::getCommonCpuGovernors() const
 {
     std::vector<std::string> commonGovernorsVector;
@@ -173,22 +183,23 @@ std::map<int, std::set<int>> CpuManager::getRelatedCpuDomains() const
     return domainMap;
 }
 
-bool CpuManager::applyGovernorToAll(const std::string& governor)
+void CpuManager::setAllCpuGovernors(const std::string& governor)
 {
 
-    // !TODO: consider adding a check to see if the governor is supported by all CPUs before attempting to set it
-    bool success = true;
-    for (auto& cpu : cpus) {
-
-        try {
-            cpu.setGovernor(governor);
-        }
-        catch (const std::exception& e) {
-            std::cerr << "Failed to set governor '" << governor << "' for CPU " << cpu.getId() << ": " << e.what() << "\n";
-            success = false; // Continue trying to set for other CPUs, but mark overall failure
-        }
+    if (!std::any_of(commonGovernors.begin(), commonGovernors.end(),
+                        [&governor](const std::string& gov) { return gov == governor; })) {
+        throw std::runtime_error(std::format("Governor '{}' is not supported by all CPUs.\nCommon governors: {}.", governor, getCommonAvailableCpuGovernorsString()));
     }
-    return success;
+    try{
+        for(auto it = cpus.begin(); it != cpus.end(); ++it) {
+            if (it->getGovernor() != governor) {
+                it->setGovernor(governor);
+            }
+        }
+    }catch (const std::exception& e) {
+        throw std::runtime_error(std::format("Failed to set governor '{}' for all CPUs.\nHint: try running with sudo or as root.", governor));
+    }
+
 }
 
 void CpuManager::applyScalingMinFreqToAll(double freqGHz)
