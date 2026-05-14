@@ -78,9 +78,6 @@ class Cpu
     void setScalingMaxFreq(double freqGHz);
 
     void setGovernor(const std::string& governor);
-    bool setEnergyPerformancePreference(const std::string& preference);
-
-    static std::string getRecommendedEPP(const std::string& governor);
 
     std::vector<int> getRelatedCpus() const;
 
@@ -92,5 +89,8 @@ class Cpu
 
     void printAvailableGovernors() const;
     void printAvailableFrequencyRange() const;
-    
+  
+  private: //!TODO check which of the public methods can be private
+    bool setEnergyPerformancePreference(const std::string& preference);
+    static std::string getRecommendedEPP(const std::string& governor);
 };

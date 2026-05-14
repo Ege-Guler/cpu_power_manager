@@ -32,7 +32,7 @@ class CpuManager
     void listAllCpuFrequencyRanges() const;
     void listSingleCpuFrequencyRange(int cpuId) const;
 
-    bool applyGovernorToAll(const std::string& governor);
+    void setAllCpuGovernors(const std::string& governor);
     
     void applyScalingMinFreqToAll(double freqGHz);
     void applyScalingMaxFreqToAll(double freqGHz);
@@ -47,6 +47,7 @@ class CpuManager
     unsigned int cpuCount;
     std::map<int, std::set<int>> relatedCpuDomains;
     
+    std::string getCommonAvailableCpuGovernorsString() const;
 
     const std::vector<std::string> getCommonCpuGovernors() const;
 
