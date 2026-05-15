@@ -214,7 +214,8 @@ void CpuManager::setSingleCpuGovernor(int cpuId, const std::string& governor)
     auto it = std::find_if(cpus.begin(), cpus.end(), [cpuId](const Cpu& cpu) { return cpu.getId() == cpuId; });
     if (it != cpus.end()) {
         // Check if the governor is supported by this cpu
-        if (!std::any_of(it->getAvailableGovernors().begin(), it->getAvailableGovernors().end(),
+        const auto& availableGovernors = it->getAvailableGovernors();
+        if (!std::any_of(availableGovernors.begin(), availableGovernors.end(),
                          [&governor](const std::string& gov) { return gov == governor; })) {
             throw std::runtime_error(std::format("Governor '{}' is not supported by CPU {}.", governor, cpuId));
         }
@@ -231,17 +232,52 @@ void CpuManager::setSingleCpuGovernor(int cpuId, const std::string& governor)
     }
 }
 
-void CpuManager::applyScalingMinFreqToAll(double freqGHz)
+void CpuManager::setAllCpuScalingFreq(double freqGHz, FreqType type)
 {
     for (auto& cpu : this->cpus) {
-        cpu.setScalingMinFreq(freqGHz);
+        try {
+            if (type == FreqType::MIN) {
+                cpu.setScalingMinFreq(freqGHz);
+            }
+            else if (type == FreqType::MAX) {
+                cpu.setScalingMaxFreq(freqGHz);
+            }
+        }
+        catch (const std::runtime_error& e) {
+            throw std::runtime_error(
+                std::format("Failed to set {} frequency for CPU {}. {}\nHint: try running with sudo or as root.",
+                            toString(type), cpu.getId(), e.what()));
+        }
+        catch (const std::out_of_range& e) {
+            throw std::runtime_error(
+                std::format("Failed to set {} frequency for CPU {}. {}", toString(type), cpu.getId(), e.what()));
+        }
     }
 }
 
-void CpuManager::applyScalingMaxFreqToAll(double freqGHz)
+void CpuManager::setSingleCpuScalingFreq(int cpuId, double freqGHz, FreqType type)
 {
-    for (auto& cpu : this->cpus) {
-        cpu.setScalingMaxFreq(freqGHz);
+    auto it = std::find_if(cpus.begin(), cpus.end(), [cpuId](const Cpu& cpu) { return cpu.getId() == cpuId; });
+    if (it != cpus.end()) {
+        try {
+            if (type == FreqType::MIN) {
+                it->setScalingMinFreq(freqGHz);
+            }
+            else if (type == FreqType::MAX) {
+                it->setScalingMaxFreq(freqGHz);
+            }
+        }
+        catch (const std::runtime_error& e) {
+            throw std::runtime_error(
+                std::format("Failed to set {} frequency for CPU {}. {}\nHint: try running with sudo or as root.", toString(type), cpuId, e.what()));
+        }
+        catch (const std::out_of_range& e) {
+            throw std::runtime_error(
+                std::format("Failed to set {} frequency for CPU {}. {}",toString(type), cpuId, e.what()));
+        }
+    }
+    else {
+        throw std::runtime_error(std::format("CPU with ID {} not found.", cpuId));
     }
 }
 

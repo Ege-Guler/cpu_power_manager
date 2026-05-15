@@ -73,22 +73,19 @@ int main(int argc, char* argv[])
             }
             if (cfg.minFreq > 0.0) {
                 if (cfg.cpuId >= 0) {
-                    Cpu cpu(cfg.cpuId);
-                    cpu.setScalingMinFreq(cfg.minFreq);
+                    manager.setSingleCpuScalingFreq(cfg.cpuId, cfg.minFreq, CpuManager::FreqType::MIN);
                 }
 
                 else {
-                    manager.applyScalingMinFreqToAll(cfg.minFreq);
+                    manager.setAllCpuScalingFreq(cfg.minFreq, CpuManager::FreqType::MIN);
                 }
             }
             if (cfg.maxFreq > 0.0) {
                 if (cfg.cpuId >= 0) {
-                    Cpu cpu(cfg.cpuId);
-                    cpu.setScalingMaxFreq(cfg.maxFreq);
+                    manager.setSingleCpuScalingFreq(cfg.cpuId, cfg.maxFreq, CpuManager::FreqType::MAX);
                 }
-
                 else {
-                    manager.applyScalingMaxFreqToAll(cfg.maxFreq);
+                    manager.setAllCpuScalingFreq(cfg.maxFreq, CpuManager::FreqType::MAX);
                 }
             }
         }

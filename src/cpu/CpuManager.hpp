@@ -14,6 +14,12 @@
 class CpuManager
 {
   public:
+    enum class FreqType
+    {
+        MIN,
+        MAX
+    };
+
     CpuManager();
 
     void discoverCpus();
@@ -35,8 +41,8 @@ class CpuManager
     void setAllCpuGovernors(const std::string& governor);
     void setSingleCpuGovernor(int cpuId, const std::string& governor);
 
-    void applyScalingMinFreqToAll(double freqGHz);
-    void applyScalingMaxFreqToAll(double freqGHz);
+    void setAllCpuScalingFreq(double freqGHz, FreqType type);
+    void setSingleCpuScalingFreq(int cpuId, double freqGHz, FreqType type);
 
     void printCpuDomainInfo() const;
 
@@ -56,3 +62,15 @@ class CpuManager
 
     bool isGovernorCommonToAllCpus(const std::string& governor) const;
 };
+
+inline std::string_view toString(CpuManager::FreqType type)
+{
+    switch (type) {
+    case CpuManager::FreqType::MIN:
+        return "minimum";
+    case CpuManager::FreqType::MAX:
+        return "maximum";
+    }
+    throw std::invalid_argument(std::format("Unknown FreqType: {}", static_cast<int>(type)));
+
+}
