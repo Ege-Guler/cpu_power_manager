@@ -123,7 +123,7 @@ void Cpu::setScalingMinFreq(double freqGHz)
 
     auto freqKHz = static_cast<uint64_t>(freqGHz * GHZ_TO_KHZ);
     if (!this->isfreqWithinCpuInfoBounds(freqKHz)) {
-        throw std::out_of_range(std::format("Requested frequency {} GHz is out of CPU info bounds ({} GHz - {} GHz)",
+        throw std::out_of_range(std::format("Requested frequency {} GHz is out of CPU info bounds ({:.2f} GHz - {:.2f} GHz)",
                                             freqGHz, getCpuInfoMinFreq(), getCpuInfoMaxFreq()));
     }
     Sysfs::write(path_builder(CpuPaths::SCALING_MIN_FREQ), std::to_string(freqKHz));
@@ -133,7 +133,7 @@ void Cpu::setScalingMaxFreq(double freqGHz)
 
     auto freqKHz = static_cast<uint64_t>(freqGHz * GHZ_TO_KHZ);
     if (!this->isfreqWithinCpuInfoBounds(freqKHz)) {
-        throw std::out_of_range(std::format("Requested frequency {} GHz is out of CPU info bounds ({} GHz - {} GHz)",
+        throw std::out_of_range(std::format("Requested frequency {} GHz is out of CPU info bounds ({:.2f} GHz - {:.2f} GHz)",
                                             freqGHz, getCpuInfoMinFreq(), getCpuInfoMaxFreq()));
     }
     Sysfs::write(path_builder(CpuPaths::SCALING_MAX_FREQ), std::to_string(freqKHz));
