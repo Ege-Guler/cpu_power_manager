@@ -183,11 +183,16 @@ std::map<int, std::set<int>> CpuManager::getRelatedCpuDomains() const
     return domainMap;
 }
 
+bool CpuManager::isGovernorCommonToAllCpus(const std::string& governor) const
+{
+    return std::any_of(commonGovernors.begin(), commonGovernors.end(),
+                       [&governor](const std::string& gov) { return gov == governor; });
+}
+
 void CpuManager::setAllCpuGovernors(const std::string& governor)
 {
 
-    if (!std::any_of(commonGovernors.begin(), commonGovernors.end(),
-                     [&governor](const std::string& gov) { return gov == governor; })) {
+    if (!isGovernorCommonToAllCpus(governor)) {
         throw std::runtime_error(std::format("Governor '{}' is not supported by all CPUs.\nCommon governors: {}.",
                                              governor, getCommonAvailableCpuGovernorsString()));
     }
@@ -199,8 +204,30 @@ void CpuManager::setAllCpuGovernors(const std::string& governor)
         }
     }
     catch (const std::exception& e) {
-        throw std::runtime_error(std::format(
-            "Failed to set governor '{}' for all CPUs.\nHint: try running with sudo or as root.", governor));
+        throw std::runtime_error(
+            std::format("Failed to set governor '{}' for all CPUs. {}\nHint: try running with sudo or as root.",
+                        governor, e.what()));
+    }
+}
+void CpuManager::setSingleCpuGovernor(int cpuId, const std::string& governor)
+{
+    auto it = std::find_if(cpus.begin(), cpus.end(), [cpuId](const Cpu& cpu) { return cpu.getId() == cpuId; });
+    if (it != cpus.end()) {
+        // Check if the governor is supported by this cpu
+        if (!std::any_of(it->getAvailableGovernors().begin(), it->getAvailableGovernors().end(),
+                         [&governor](const std::string& gov) { return gov == governor; })) {
+            throw std::runtime_error(std::format("Governor '{}' is not supported by CPU {}.", governor, cpuId));
+        }
+        try {
+            it->setGovernor(governor);
+        }
+        catch (const std::exception& e) {
+            throw std::runtime_error(std::format(
+                "Failed to set governor '{}' for CPU {}.\nHint: try running with sudo or as root.", governor, cpuId));
+        }
+    }
+    else {
+        throw std::runtime_error(std::format("CPU with ID {} not found.", cpuId));
     }
 }
 

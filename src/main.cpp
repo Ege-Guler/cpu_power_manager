@@ -63,8 +63,14 @@ int main(int argc, char* argv[])
             }
         }
         else if (cfg.activeSubcommand == Subcommand::Set) {
-            if (!cfg.governor.empty())
-                manager.setAllCpuGovernors(cfg.governor);
+            if (!cfg.governor.empty()) {
+                if (cfg.cpuId >= 0) {
+                    manager.setSingleCpuGovernor(cfg.cpuId, cfg.governor);
+                }
+                else {
+                    manager.setAllCpuGovernors(cfg.governor);
+                }
+            }
             if (cfg.minFreq > 0.0) {
                 if (cfg.cpuId >= 0) {
                     Cpu cpu(cfg.cpuId);

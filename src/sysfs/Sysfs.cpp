@@ -33,8 +33,7 @@ bool write(const std::string& path, const std::string& val)
 
     if (!file.is_open()) {
 
-        throw std::runtime_error("Error: Could not open file " + path +
-                                 " for writing. Check if the file exists and you have the necessary permissions.");
+        throw std::runtime_error("Error: Could not open file " + path + " for writing.");
     }
 
     // Write the value.
